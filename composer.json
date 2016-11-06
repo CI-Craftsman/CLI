@@ -1,6 +1,6 @@
 {
-  "name": "craftsman/craftsman",
-  "description": "Craftsman CLI provides a number of helpful commands for your use while developing your Codeigniter application. It is driven by the powerful Symfony Console component.",
+  "name": "craftsman/cli",
+  "description": "Craftsman CLI provides a number of helpful commands for your use while developing your Codeigniter application.",
   "keywords": [
     "craftsman",
     "codeigniter",
@@ -32,7 +32,7 @@
   "bin": ["craftsman"],
   "extra": {
     "branch-alias": {
-      "dev-master": "3.0.x-dev"
+      "dev-master": "4.0.x-dev"
     }
   }
 }
