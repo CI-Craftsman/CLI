@@ -1,0 +1,41 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+class Migration_{{NAME}} extends CI_Migration 
+{
+	public function __construct()
+	{
+		$this->load->dbforge();
+		$this->load->database();
+	}
+
+	public function up() 
+	{
+		$this->{{TABLE_NAME}}_table();
+	}
+
+	public function down() 
+	{
+		/**
+		 * Uncomment bellow if you need to destroy the columns you modify.
+		 */
+{% for field in FIELDS %}{% set command = argument(field) %}
+		#$this->dbforge->drop_column('ci_{{ TABLE_NAME|replace({REPLACE_TAG : ''}) }}', '{{command.name}}');
+{% endfor %}
+	}
+
+	private function {{TABLE_NAME}}_table()
+	{
+		$fields = array({% for field in FIELDS %}
+			{% set command = argument(field) %}'<column_old_name>' => array(
+				'name' => '{{command.name}}',
+				'type' => '{{command.type|upper}}',
+			),
+			{% endfor %}
+		);		
+
+		$this->dbforge->modify_column('ci_{{ TABLE_NAME|replace({REPLACE_TAG : ''}) }}', $fields); 
+	}	
+}
+
+/* End of file {{filename}}.php */
+/* Location: {{path}} */

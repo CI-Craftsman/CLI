@@ -1,0 +1,96 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+/**
+ * 
+ */
+class {{ NAME }} extends CI_Controller 
+{
+	{% if ACTIONS is empty %}
+/**
+	 * Display a listing of the resource.
+	 * GET /{{ COLLECTION }}
+	 */
+	public function index()
+	{
+		
+	}
+
+	/**
+	 * Display the specified resource.
+	 * GET /{{ COLLECTION }}/get/{id}
+	 *
+	 * @param  int  $id
+	 */
+	public function get($id)
+	{
+
+	}	
+
+	/**
+	 * Show the form for creating a new resource.
+	 * GET /{{ COLLECTION }}/create
+	 */
+	public function create()
+	{
+
+	}
+
+	/**
+	 * Store a newly created resource in storage.
+	 * POST /{{ COLLECTION }}/store
+	 */	
+	public function store()
+	{
+		
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 * GET /{{ COLLECTION }}/edit/{id}
+	 *
+	 * @param  int  $id
+	 */
+	public function edit($id)
+	{
+
+	}	
+
+	/**
+	 * Update the specified resource in storage.
+	 * PUT /{{ COLLECTION }}/update/{id}
+	 *
+	 * @param  int  $id
+	 */
+	public function update($id)
+	{
+
+	}
+
+	/**
+	 * Remove the specified resource from storage.
+	 * DELETE /{{ COLLECTION }}/delete/{id}
+	 *
+	 * @param  int  $id
+	 */
+	public function delete($id)
+	{
+		
+	}
+	{% else %}
+
+	{% for action in ACTIONS %}
+/**
+	 * {{action|upper}}|DESCRIPTION|
+	 * @param [type] $[name] [<description>]
+	 * @return [type] [<description>]
+	 */
+	public function {{action}}()
+	{
+
+	}
+{% endfor %}
+{% endif %}
+}
+
+/* End of file {{ FILENAME  }} */
+/* Location: {{ PATH  }} */

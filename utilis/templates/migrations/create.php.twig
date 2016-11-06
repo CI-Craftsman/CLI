@@ -1,0 +1,45 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+class Migration_{{NAME}} extends CI_Migration {
+
+	public function __construct()
+	{
+		$this->load->dbforge();
+		$this->load->database();
+	}
+
+	public function up()
+	{
+		$this->create_{{TABLE_NAME}}_table();
+	}
+
+	public function down()
+	{
+		$this->dbforge->drop_table('ci_{{TABLE_NAME}}');
+	}
+
+	private function create_{{TABLE_NAME}}_table()
+	{
+		$this->dbforge->add_field(array(
+			'id' => array(
+				'type' => 'INT',
+				'null' => FALSE,
+				'auto_increment' => TRUE,
+				'unsigned' => TRUE,
+				'constraint' => 5
+			),{% for field in FIELDS %}{% set command = argument(field) %}
+
+			'{{command.name}}' => array(
+				'type' => '{{command.type|upper}}',
+				'constraint' => 100,
+				'null' => TRUE,
+			),{% endfor %}
+
+		));
+		$this->dbforge->add_key('id', TRUE);
+		$this->dbforge->create_table('ci_{{TABLE_NAME}}', TRUE);
+	}
+}
+
+/* End of file {{FILENAME}}.php */
+/* Location: {{PATH}} */

@@ -1,0 +1,48 @@
+#!/usr/bin/env php
+<?php
+use Dotenv\Dotenv;
+use Symfony\Component\Console\Application;
+
+require_once(__DIR__.'/utilis/bootstrap.php');
+
+/**
+ * CLI Codeigniter Crafstman
+ *
+ * @author     David Sosa Valdes <https://github.com/davidsosavaldes>
+ * @license    MIT License
+ * @link       https://github.com/davidsosavaldes/Craftsman
+ * @copyright  Copyright (c) 2016, David Sosa Valdes.
+ */
+$dotenv = new Dotenv(getcwd());
+$dotenv->load();
+$dotenv->required(['CI_SYSTEMPATH','CI_APPPATH'])->notEmpty();
+$dotenv->required('CI_FCPATH');
+
+set_time_limit(0);
+error_reporting(-1);
+ini_set('display_errors', 1);
+
+define('CRAFTSMANPATH', __DIR__.'/');
+
+// Set the commands
+$commands = array(
+	new Craftsman\Commands\Generators\Controller(),
+	new Craftsman\Commands\Generators\Model(),
+	new Craftsman\Commands\Generators\Migration(),
+	new Craftsman\Commands\Generators\Seeder(),
+	new Craftsman\Commands\Migrations\Info(),
+	new Craftsman\Commands\Migrations\Version(),
+	new Craftsman\Commands\Migrations\Latest(),
+	new Craftsman\Commands\Migrations\Rollback(),
+	new Craftsman\Commands\Migrations\Reset(),
+	new Craftsman\Commands\Migrations\Refresh(),
+	new Craftsman\Commands\Database\Seeder(),
+	new Craftsman\Commands\General\Serve()
+);
+
+$application = new Application('Craftsman', '4.0.0');
+// Add the default commands
+foreach ($commands as $key => $command) {
+	$application->add($command);
+}
+$application->run();

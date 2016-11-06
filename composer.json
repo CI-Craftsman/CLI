@@ -1,0 +1,38 @@
+{
+  "name": "craftsman/craftsman",
+  "description": "Craftsman CLI provides a number of helpful commands for your use while developing your Codeigniter application. It is driven by the powerful Symfony Console component.",
+  "keywords": [
+    "craftsman",
+    "codeigniter",
+    "cli"
+  ],
+  "homepage": "https://github.com/davidsosavaldes/Craftsman",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "David Sosa Valdes",
+      "email": "david.sosa.valdes@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.0",
+    "symfony/console": "^3.0",
+    "symfony/filesystem": "^3.0",
+    "symfony/process": "^3.0",
+    "twig/twig" : "^1.18",
+    "codeigniter/framework": "~3.0",
+    "vlucas/phpdotenv": "^2.4"
+  },
+  "autoload": {
+    "psr-4": { "Craftsman\\": "src/" }
+  },
+  "support":{
+    "issues": "https://github.com/davidsosavaldes/Craftsman/issues"
+  },
+  "bin": ["craftsman"],
+  "extra": {
+    "branch-alias": {
+      "dev-master": "3.0.x-dev"
+    }
+  }
+}
