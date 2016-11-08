@@ -2,8 +2,6 @@
 
 #Codeigniter CLI - Craftsman
 
-Advanced comand line interface for Codeigniter 3.0 using **Symfony Console component**.
-
 Craftsman is a command line interface that provides a set of commands that will help you when you're developing your application, in addition to make your job easier. It is driven by the powerful Symfony Console component.
 
 ### Demo
