@@ -1,6 +1,6 @@
 **Documentation for Craftsman is available at [https://ci-craftsman.github.io/documentation/](https://ci-craftsman.github.io/documentation/).**
 
-#Codeigniter CLI - Craftsman
+# Craftsman CLI
 
 Craftsman is a command line interface that provides a set of commands that will help you when you're developing your application, in addition to make your job easier. It is driven by the powerful Symfony Console component.
 
