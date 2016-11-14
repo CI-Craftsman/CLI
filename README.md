@@ -1,4 +1,4 @@
-**Documentation for Craftsman is available at [https://davidsosavaldes.gitbooks.io/craftsman/content/](https://davidsosavaldes.gitbooks.io/craftsman/content/).**
+**Documentation for Craftsman is available at [https://ci-craftsman.github.io/documentation/](https://ci-craftsman.github.io/documentation/).**
 
 #Codeigniter CLI - Craftsman
 
