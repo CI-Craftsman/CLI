@@ -15,7 +15,7 @@ class Codeigniter
 
   public function __construct()
   {
-    return require_once __DIR__.'/../../utilis/codeigniter.php';
+    return require_once __DIR__.'/../../utils/codeigniter.php';
   }
 
   public function &get()

@@ -67,6 +67,6 @@ class Serve extends Command
 
     $this->text("Codeigniter development server started on http://{$host}:{$port}/");
 
-    passthru("{$binary} -S {$host}:{$port} -t {$docroot} {$base}/utilis/server.php");
+    passthru("{$binary} -S {$host}:{$port} -t {$docroot} {$base}/utils/server.php");
   }
 }

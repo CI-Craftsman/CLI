@@ -79,7 +79,7 @@ abstract class Migration extends Command
       $CI = new Codeigniter();
       $this->CI =& $CI->get();
       // Add the Craftsman extended packages
-      $this->CI->load->add_package_path(CRAFTSMANPATH.'utilis/extend/');
+      $this->CI->load->add_package_path(CRAFTSMANPATH.'utils/extend/');
       // Load the special migration settings
       $this->CI->config->load('migration', TRUE, TRUE);
 

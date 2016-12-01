@@ -34,7 +34,7 @@ abstract class Generator extends Command
   {
     parent::__construct();
     $this->_filesystem = new Filesystem();
-		$loader = new \Twig_Loader_Filesystem(CRAFTSMANPATH.'utilis/templates/');
+		$loader = new \Twig_Loader_Filesystem(CRAFTSMANPATH.'utils/templates/');
 		$this->_twig = new \Twig_Environment($loader);
   }
 

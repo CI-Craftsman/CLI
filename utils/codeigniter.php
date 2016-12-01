@@ -12,7 +12,7 @@
 
 define('ENVIRONMENT', getenv('CI_ENV') ? getenv('CI_ENV') : 'development');
 
-$system_path        = getenv('CI_SYSTEMPATH');
+$system_path        = getenv('CI_VENDORPATH').'codeigniter/framework/system/';
 $application_folder = getenv('CI_APPPATH');
 $public_folder      = getenv('CI_FCPATH');
 
@@ -49,18 +49,25 @@ else
 	define('APPPATH', BASEPATH.$application_folder.'/');
 }
 
-define('VIEWPATH', $application_folder . '/views/');
-define('FCPATH', $public_folder . '/');
+define('VIEWPATH', $application_folder.'/views/');
 
-require(BASEPATH . 'core/Common.php');
-
-if (file_exists(APPPATH . 'config/' . ENVIRONMENT . '/constants.php'))
+if ($_temp = realpath($public_folder)) 
 {
-  require(APPPATH . 'config/' . ENVIRONMENT . '/constants.php');
+  define('FCPATH', $_temp.'/');
+}
+else{
+  define('FCPATH', realpath('.').'/');
+}
+
+require(BASEPATH.'core/Common.php');
+
+if (file_exists(APPPATH.'config/'.ENVIRONMENT.'/constants.php'))
+{
+  require(APPPATH.'config/'.ENVIRONMENT.'/constants.php');
 }
 else
 {
-  require(APPPATH . 'config/constants.php');
+  require(APPPATH.'config/constants.php');
 }
 
 # Make sure some config variables are set correctly
@@ -107,7 +114,7 @@ load_class('Security', 'core');
 load_class('Input', 'core');
 load_class('Lang', 'core');
 
-require_once(BASEPATH . 'core/Controller.php');
+require_once(BASEPATH.'core/Controller.php');
 
 if (!function_exists('get_instance'))
 {
