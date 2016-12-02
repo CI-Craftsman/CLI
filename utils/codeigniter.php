@@ -12,7 +12,7 @@
 
 define('ENVIRONMENT', getenv('CI_ENV') ? getenv('CI_ENV') : 'development');
 
-$system_path        = getenv('CI_VENDORPATH').'codeigniter/framework/system/';
+$system_path        = getenv('VENDOR_PATH').'codeigniter/framework/system/';
 $application_folder = getenv('CI_APPPATH');
 $public_folder      = getenv('CI_FCPATH');
 
