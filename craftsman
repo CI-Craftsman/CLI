@@ -3,10 +3,6 @@
 use Dotenv\Dotenv;
 use Symfony\Component\Console\Application;
 
-set_time_limit(0);
-error_reporting(-1);
-ini_set('display_errors', 1);
-
 require_once(__DIR__.'/utils/bootstrap.php');
 
 /**
@@ -18,15 +14,14 @@ require_once(__DIR__.'/utils/bootstrap.php');
  * @copyright  Copyright (c) 2016, David Sosa Valdes.
  */
 try {
-	$dotenv = new Dotenv(getcwd());
+	$dotenv = new Dotenv(getcwd(), '.craftsman');
 	$dotenv->load();
 	$dotenv->required(['VENDOR_PATH','CI_APPPATH'])->notEmpty();
 
 	define('CRAFTSMANPATH', __DIR__.'/');
 
 } catch (Exception $e) {
-	print $e->getMessage();
-	exit();
+	exit(preg_replace('/\s+/', ' ', $e->getMessage()));
 }
 
 // Set the commands
