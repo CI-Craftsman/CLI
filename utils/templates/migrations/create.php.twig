@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Migration_{{NAME}} extends CI_Migration {
-
+class Migration_{{NAME}} extends CI_Migration 
+{
 	public function __construct()
 	{
 		$this->load->dbforge();
@@ -15,7 +15,7 @@ class Migration_{{NAME}} extends CI_Migration {
 
 	public function down()
 	{
-		$this->dbforge->drop_table('ci_{{TABLE_NAME}}');
+		$this->dbforge->drop_table('{{TABLE_NAME}}');
 	}
 
 	private function create_{{TABLE_NAME}}_table()
@@ -37,7 +37,7 @@ class Migration_{{NAME}} extends CI_Migration {
 
 		));
 		$this->dbforge->add_key('id', TRUE);
-		$this->dbforge->create_table('ci_{{TABLE_NAME}}', TRUE);
+		$this->dbforge->create_table('{{TABLE_NAME}}', TRUE);
 	}
 }
 
