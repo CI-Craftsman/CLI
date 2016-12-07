@@ -19,9 +19,11 @@ class Seeder extends Generator implements \Craftsman\Interfaces\Command
 	public function start()
 	{
     $filename = ucfirst($this->getArgument('filename'));
-    $basepath = rtrim($this->getOption('path'),'/').'/seeders';
+    $basepath = rtrim($this->getOption('path'),'/');
+		$appdir = basename($basepath);
+		$basepath.= '/seeders';
 
-		$this->text('Seeder path: <comment>'.$basepath.'</comment>');
+		$this->text("Seeder path: <comment>{$appdir}/seeders</comment>");
 		$this->text('Filename: <comment>'.$filename.'.php</comment>');
 
     // Confirm the action
@@ -36,7 +38,7 @@ class Seeder extends Generator implements \Craftsman\Interfaces\Command
 	  		'NAME' 			 => $filename,
 	  		'COLLECTION' => $filename,
 	  		'FILENAME'   => basename($test_file),
-	  		'PATH'       => $test_file
+	  		'PATH'       => "./{$appdir}/seeders"
 	  	);
 
 	  	if ($this->make($test_file, 'seeders/base.php.twig', $options))

@@ -1,6 +1,6 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Migration_{{NAME}} extends CI_Migration 
+class Migration_{{NAME}} extends CI_Migration
 {
 	public function __construct()
 	{
@@ -8,12 +8,12 @@ class Migration_{{NAME}} extends CI_Migration
 		$this->load->database();
 	}
 
-	public function up() 
+	public function up()
 	{
 		$this->{{TABLE_NAME}}_table();
 	}
 
-	public function down() 
+	public function down()
 	{
 		/**
 		 * Uncomment bellow if you need to destroy the columns you modify.
@@ -31,11 +31,11 @@ class Migration_{{NAME}} extends CI_Migration
 				'type' => '{{command.type|upper}}',
 			),
 			{% endfor %}
-		);		
+		);
 
-		$this->dbforge->modify_column('{{ TABLE_NAME|replace({REPLACE_TAG : ''}) }}', $fields); 
-	}	
+		$this->dbforge->modify_column('{{ TABLE_NAME|replace({REPLACE_TAG : ''}) }}', $fields);
+	}
 }
 
-/* End of file {{filename}}.php */
-/* Location: {{path}} */
+/* End of file {{FILENAME}} */
+/* Location: {{PATH}}/{{FILENAME}} */

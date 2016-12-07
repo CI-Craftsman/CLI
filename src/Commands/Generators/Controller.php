@@ -19,58 +19,60 @@ class Controller extends Generator implements \Craftsman\Interfaces\Command
 	public function start()
 	{
     $filename = ucfirst($this->getArgument('filename'));
-    // $basepath = rtrim($this->getOption('path'),'/').'/controllers/';
 		$basepath = rtrim(preg_replace('/controllers/', '', $this->getOption('path')),'/');
-		$basepath.= '/controllers';
+		$appdir   = basename($basepath);
 
-		$this->text("Controller path: <comment>{$basepath}</comment>");
+		$controllersPath = $basepath.'/controllers';
+		$viewsPath = $basepath.'/views';
+
+		$this->text("Controller path: <comment>{$appdir}/controllers</comment>");
 		$this->text("Filename: <comment>{$filename}.php</comment>");
 
     // Confirm the action
 	  if($this->confirm("Do you want to create a {$filename} Controller?", TRUE))
 	  {
-			$test_file = "{$basepath}/{$filename}.php";
+			$controllerFile = "{$controllersPath}/{$filename}.php";
 
 			// We could try to create a directory if doesn't exist.
-			(! $this->_filesystem->exists($basepath)) && $this->_filesystem->mkdir($basepath);
+			(! $this->_filesystem->exists($controllersPath)) && $this->_filesystem->mkdir($controllersPath);
 
 	    $options = array(
 	    	'NAME'       => $filename,
 	    	'COLLECTION' => strtolower($filename),
-	    	'FILENAME'   => basename($test_file),
-	    	'PATH'       => $test_file,
+	    	'FILENAME'   => basename($controllerFile),
+	    	'PATH'       => "./{$appdir}/controllers",
 	    	'ACTIONS'    => $this->getArgument('options')
 	    );
 
 	    $this->comment('Controller');
 
-	    if ($this->make($test_file, 'controllers/base.php.twig', $options))
+	    if ($this->make($controllerFile, 'controllers/base.php.twig', $options))
 	    {
-	    	$this->text("<info>create</info> {$test_file}");
+	    	$this->text("<info>create</info> {$appdir}/controllers/".basename($controllerFile));
 	    }
 
 	    $views = empty($options['ACTIONS'])
 	    	? array('index','get','create','edit')
 	    	: $options['ACTIONS'];
 
-	    $viewpath = rtrim($this->getOption('path'),'/').'/views/'.strtolower($filename);
+	    $resourcePath = "{$viewsPath}/".strtolower($filename);
 
 	   	// We could try to create a directory if doesn't exist.
-			(! $this->_filesystem->exists($viewpath)) && $this->_filesystem->mkdir($viewpath);
+			(! $this->_filesystem->exists($resourcePath)) && $this->_filesystem->mkdir($resourcePath);
 
 	    $options['EXT']      = '.php';
 	    $options['CLASS']    = $filename;
-	    $options['VIEWPATH'] = $viewpath;
+	    $options['VIEWPATH'] = "{$appdir}/views";
 
 	    $this->comment('Views');
 
 	    foreach ($views as $view)
 	    {
-	    	$viewfile = "{$viewpath}/{$view}.php";
+	    	$viewFile = "{$resourcePath}/{$view}.php";
 	    	$options['METHOD'] = $view;
 
-	    	$this->make($viewfile, 'views/base.php.twig',$options);
-	    	$this->text("<info>create</info> {$viewfile}");
+	    	$this->make($viewFile, 'views/base.php.twig',$options);
+	    	$this->text("<info>create</info> {$appdir}/views/".basename($viewFile));
 	    }
 	  }
 	  else

@@ -18,10 +18,12 @@ class Model extends Generator implements \Craftsman\Interfaces\Command
 
 	public function start()
 	{
-        $filename = ucfirst($this->getArgument('filename'));
-        $basepath = rtrim($this->getOption('path'),'/').'/models/';
+    $filename = ucfirst($this->getArgument('filename'));
+    $basepath = rtrim($this->getOption('path'),'/');
+		$appdir = basename($basepath);
+		$basepath.= '/models/';
 
-		$this->text('Controller path: <comment>'.$basepath.'</comment>');
+		$this->text("Controller path: <comment>{$appdir}/models</comment>");
 		$this->text('Filename: <comment>'.$filename.'_model.php</comment>');
 
         // Confirm the action
@@ -31,13 +33,14 @@ class Model extends Generator implements \Craftsman\Interfaces\Command
 			(! $this->_filesystem->exists($basepath)) && $this->_filesystem->mkdir($basepath);
 
 	    	$test_file = $basepath.$filename.'_model.php';
-				
+
 	    	$options = array(
-	    		'NAME' => $filename.'_model',
+	    		'NAME' 			 => $filename.'_model',
 	    		'COLLECTION' => $filename,
 	    		'FILENAME'   => basename($test_file),
-	    		'PATH'       => $test_file
+	    		'PATH'       => "./{$appdir}/models"
 	    	);
+
 	    	if ($this->make($test_file, 'models/base.php.twig', $options))
 	    	{
 	    		$this->success('Model created successfully!');

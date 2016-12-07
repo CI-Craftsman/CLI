@@ -21,12 +21,13 @@ class Migration extends Generator implements \Craftsman\Interfaces\Command
 		// Set default timezone if we use a timestamp migration version.
 		date_default_timezone_set('UTC');
 
-		$migration_regex = ($this->getOption('timestamp') !== FALSE)
-			? '/^\d{14}_(\w+)$/'
-			: '/^\d{3}_(\w+)$/';
+		$migration_regex = ($this->getOption('secuential') !== FALSE)
+			? '/^\d{3}_(\w+)$/'
+			: '/^\d{14}_(\w+)$/';
 
 		$filename   = $this->getArgument('filename');
 		$basepath   = rtrim(preg_replace(['/migrations/','/migration/'], ['',''], $this->getOption('path')),'/');
+		$appdir 		= basename($basepath);
 		$migrations = array();
 
 		if ($this->_filesystem->exists($basepath.'/migrations'))
@@ -58,11 +59,11 @@ class Migration extends Generator implements \Craftsman\Interfaces\Command
 		$versions = array_keys($migrations);
 		end($versions);
 
-		$target_version = ($this->getOption('timestamp') !== FALSE)
-			? date("YmdHis")
-			: sprintf('%03d', abs(end($versions)) + 1);
+		$target_version = ($this->getOption('secuential') !== FALSE)
+			? sprintf('%03d', abs(end($versions)) + 1)
+			: date("YmdHis");
 
-		// Maybe something wrong with timestamp?
+		// Maybe something wrong with the target version?
 		if ($target_version <= current($versions))
 		{
 			$this->note("There's something wrong with the target version, we need to replace it with a new one.");
@@ -71,9 +72,9 @@ class Migration extends Generator implements \Craftsman\Interfaces\Command
 
 		$target_file = $target_version."_".$filename.".php";
 
-		$this->text('(In '.$basepath.')');
+		// $this->text('(In '.$basepath.')');
 		$this->newLine();
-		$this->text('Migration directory: <comment>migrations/</comment>');
+		$this->text('Migration path: <comment>'.basename($basepath).'/migrations/</comment>');
 		$this->text('Filename: <comment>'.$target_file.'</comment>');
 
 		// Confirm the action
@@ -89,7 +90,7 @@ class Migration extends Generator implements \Craftsman\Interfaces\Command
 	    $options = array(
 	      'NAME'    	 => ucfirst($this->getArgument('filename')),
 	      'FILENAME' 	 => $target_file,
-	      'PATH'       => $test_file,
+	      'PATH'       => "./{$appdir}/migrations",
 	      'TABLE_NAME' => str_replace($_type.'_', '', $this->getArgument('filename')),
 	      'FIELDS'     => (array) $this->getArgument('options')
 	    );
