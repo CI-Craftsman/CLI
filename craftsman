@@ -24,24 +24,35 @@ try {
 	exit(preg_replace('/\s+/', ' ', $e->getMessage()));
 }
 
-// Set the commands
-$commands = array(
-	new Craftsman\Commands\Generators\Controller(),
-	new Craftsman\Commands\Generators\Model(),
-	new Craftsman\Commands\Generators\Migration(),
-	new Craftsman\Commands\Generators\Seeder(),
-	new Craftsman\Commands\Migrations\Info(),
-	new Craftsman\Commands\Migrations\Version(),
-	new Craftsman\Commands\Migrations\Latest(),
-	new Craftsman\Commands\Migrations\Rollback(),
-	new Craftsman\Commands\Migrations\Reset(),
-	new Craftsman\Commands\Migrations\Refresh(),
-	new Craftsman\Commands\Database\Seeder(),
-	new Craftsman\Commands\General\Serve(),
-	new Craftsman\Commands\General\Console()
-);
+$generators = [
+	new Craftsman\Commands\Generators\Controller,
+	new Craftsman\Commands\Generators\Model,
+	new Craftsman\Commands\Generators\Migration,
+	new Craftsman\Commands\Generators\Seeder
+];
 
-$application = new Application('Craftsman', '4.1.0');
+$migrations = [
+	new Craftsman\Commands\Migrations\Info,
+	new Craftsman\Commands\Migrations\Version,
+	new Craftsman\Commands\Migrations\Latest,
+	new Craftsman\Commands\Migrations\Rollback,
+	new Craftsman\Commands\Migrations\Reset,
+	new Craftsman\Commands\Migrations\Refresh
+];
+
+$database = [
+	new Craftsman\Commands\Database\Seeder
+];
+
+$general = [
+	new Craftsman\Commands\General\Serve,
+	new Craftsman\Commands\General\Console
+];
+
+// Set the commands
+$commands = array_merge($generators, $migrations, $database, $general);
+
+$application = new Application('Craftsman', '4.2.0');
 // Add the default commands
 foreach ($commands as $key => $command) {
 	$application->add($command);
