@@ -1,9 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /**
- * 
+ *
  */
-class {{ NAME }} extends CI_Controller 
+class {{ NAME }} extends CI_Controller
 {
 	{% if ACTIONS is empty %}
 /**
@@ -12,7 +12,7 @@ class {{ NAME }} extends CI_Controller
 	 */
 	public function index()
 	{
-		
+
 	}
 
 	/**
@@ -24,7 +24,7 @@ class {{ NAME }} extends CI_Controller
 	public function get($id)
 	{
 
-	}	
+	}
 
 	/**
 	 * Show the form for creating a new resource.
@@ -38,10 +38,10 @@ class {{ NAME }} extends CI_Controller
 	/**
 	 * Store a newly created resource in storage.
 	 * POST /{{ COLLECTION }}/store
-	 */	
+	 */
 	public function store()
 	{
-		
+
 	}
 
 	/**
@@ -53,7 +53,7 @@ class {{ NAME }} extends CI_Controller
 	public function edit($id)
 	{
 
-	}	
+	}
 
 	/**
 	 * Update the specified resource in storage.
@@ -74,7 +74,7 @@ class {{ NAME }} extends CI_Controller
 	 */
 	public function delete($id)
 	{
-		
+
 	}
 	{% else %}
 
@@ -88,8 +88,7 @@ class {{ NAME }} extends CI_Controller
 	{
 
 	}
-{% endfor %}
-{% endif %}
+  {% endfor %}{% endif %} 
 }
 
 /* End of file {{ FILENAME  }} */
