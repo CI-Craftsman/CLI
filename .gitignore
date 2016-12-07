@@ -4,6 +4,4 @@ composer.lock
 _site
 .sass-cache
 .jekyll-metadata
-/tests/application
-/tests/index.php
-/tests/.env
+/tests/integration/.craftsman

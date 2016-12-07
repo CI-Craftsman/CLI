@@ -21,7 +21,8 @@
     "symfony/process": "^3.0",
     "twig/twig" : "^1.18",
     "codeigniter/framework": "~3.0",
-    "vlucas/phpdotenv": "^2.4"
+    "vlucas/phpdotenv": "^2.4",
+    "psy/psysh": "@stable"
   },
   "autoload": {
     "psr-4": { "Craftsman\\": "src/" }

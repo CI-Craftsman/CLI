@@ -37,7 +37,8 @@ $commands = array(
 	new Craftsman\Commands\Migrations\Reset(),
 	new Craftsman\Commands\Migrations\Refresh(),
 	new Craftsman\Commands\Database\Seeder(),
-	new Craftsman\Commands\General\Serve()
+	new Craftsman\Commands\General\Serve(),
+	new Craftsman\Commands\General\Console()
 );
 
 $application = new Application('Craftsman', '4.1.0');
