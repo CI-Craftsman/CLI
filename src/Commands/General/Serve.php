@@ -5,6 +5,8 @@ use Craftsman\Core\Command;
 use Symfony\Component\Process\ProcessUtils;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
  * Serve Command
@@ -67,6 +69,13 @@ class Serve extends Command
 
     $this->text("Codeigniter development server started on http://{$host}:{$port}/");
 
-    passthru("{$binary} -S {$host}:{$port} -t {$docroot} {$base}/utils/server.php");
+    $command = "{$binary} -S {$host}:{$port} -t {$docroot} {$base}/utils/server.php";
+    $process = new Process($command);
+    $process->setTimeout(0);
+    $process->run();
+
+    if (! $process->isSuccessful()) {
+      throw new ProcessFailedException($process);
+    }
   }
 }
