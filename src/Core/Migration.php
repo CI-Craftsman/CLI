@@ -59,10 +59,10 @@ abstract class Migration extends Command
           'application/migrations/'
         )
         ->addOption(
-          'timestamp',
+          'sequential',
           NULL,
           InputOption::VALUE_NONE,
-          'If set, the migration will run with timestamp mode active'
+          'If set, the migration will run with sequential mode active'
         );
     }
 
@@ -76,8 +76,9 @@ abstract class Migration extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
       // Create a Codeigniter instance
-      $CI = new Codeigniter();
-      $this->CI =& $CI->get();
+      $codeigniter = new Codeigniter();
+
+      $this->CI =& $codeigniter->get();
       // Add the Craftsman extended packages
       $this->CI->load->add_package_path(CRAFTSMANPATH.'utils/extend/');
       // Load the special migration settings
@@ -85,9 +86,9 @@ abstract class Migration extends Command
 
       if (! $this->harmless)
       {
-        $message = 'WARNING! You are about to execute a database migration that could '
-          .'result in schema changes and data lost. Do you wish to continue?';
-        if (! $this->confirm($message))
+        #$message = "WARNING! .\n ";
+        $this->note("You are about to execute a database migration that could result in schema changes and data lost");
+        if (! $this->confirm("Do you wish to continue?"))
         {
           $this->error('Process aborted!');
           exit(3);
@@ -95,10 +96,11 @@ abstract class Migration extends Command
       }
       if ($params = $this->CI->config->item('migration'))
       {
-        $this->text('(in '.APPPATH.')');
+        $appDir = realpath(APPPATH.'../');
+        $this->text('(in ~/'.basename($appDir).'/'.basename(APPPATH).'/)');
         $this->newLine();
 
-        ($this->getOption('timestamp') !== FALSE) && $params['migration_type'] = 'timestamp';
+        ($this->getOption('sequential') !== FALSE) && $params['migration_type'] = 'sequential';
         $this->CI->load->library('migration', $params);
         $this->migration = $this->CI->migration;
       }

@@ -21,7 +21,7 @@ class Migration extends Generator implements \Craftsman\Interfaces\Command
 		// Set default timezone if we use a timestamp migration version.
 		date_default_timezone_set('UTC');
 
-		$migration_regex = ($this->getOption('secuential') !== FALSE)
+		$migration_regex = ($this->getOption('sequential') !== FALSE)
 			? '/^\d{3}_(\w+)$/'
 			: '/^\d{14}_(\w+)$/';
 
@@ -59,7 +59,7 @@ class Migration extends Generator implements \Craftsman\Interfaces\Command
 		$versions = array_keys($migrations);
 		end($versions);
 
-		$target_version = ($this->getOption('secuential') !== FALSE)
+		$target_version = ($this->getOption('sequential') !== FALSE)
 			? sprintf('%03d', abs(end($versions)) + 1)
 			: date("YmdHis");
 

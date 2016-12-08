@@ -76,10 +76,10 @@ abstract class Generator extends Command
       //   'If set, the migration will run with timestamp mode active'
     	// )
 			->addOption(
-				'secuential',
+				'sequential',
 				NULL,
 				InputOption::VALUE_NONE,
-				'If set, the migration will run with secuential mode active'
+				'If set, the migration will run with sequential mode active'
 			);
     }
 
