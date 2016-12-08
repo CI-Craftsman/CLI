@@ -2,11 +2,11 @@
 
 # Craftsman CLI
 
-Craftsman is a command line interface that provides a set of commands that will help you when you're developing your application, in addition to make your job easier. It is driven by the powerful Symfony Console component.
+Craftsman is a command line interface that provides a set of commands that will help you when you're developing your application, in addition to make your job easier. It is driven by the Symfony Console component.
 
 ### Demo
 
-[![asciicast](https://asciinema.org/a/45166.png)](https://asciinema.org/a/45166)
+[![asciicast](https://asciinema.org/a/95481.png)](https://asciinema.org/a/95481)
 
 ### Related Projects for CodeIgniter 3.0
 
