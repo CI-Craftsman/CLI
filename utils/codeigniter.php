@@ -51,7 +51,7 @@ else
 
 define('VIEWPATH', $application_folder.'/views/');
 
-if ($_temp = realpath($public_folder)) 
+if ($_temp = realpath($public_folder))
 {
   define('FCPATH', $_temp.'/');
 }
@@ -116,12 +116,17 @@ load_class('Lang', 'core');
 
 require_once(BASEPATH.'core/Controller.php');
 
+/**
+ * Controller alias
+ */
+class Codeigniter extends \CI_Controller {}
+
 if (!function_exists('get_instance'))
 {
   function &get_instance()
   {
-    return \CI_Controller::get_instance();
+    return Codeigniter::get_instance();
   }
 }
 
-return new \CI_Controller();
+return new Codeigniter;
