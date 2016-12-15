@@ -15,6 +15,7 @@ class Migration extends Generator implements \Craftsman\Interfaces\Command
 {
 	protected $name        = 'generate:migration';
 	protected $description = 'Generate a Migration';
+	protected $aliases 		 = ['g:migration'];
 
 	public function start()
 	{

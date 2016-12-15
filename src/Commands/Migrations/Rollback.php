@@ -15,6 +15,7 @@ class Rollback extends Migration implements \Craftsman\Interfaces\Command
 {
 	protected $name        = 'migrate:rollback';
 	protected $description = 'Rollback from the last migration';
+	protected $aliases 		 = ['m:rollback'];
 
 	public function start()
 	{
@@ -23,8 +24,8 @@ class Rollback extends Migration implements \Craftsman\Interfaces\Command
 		$db_version = intval($this->migration->get_db_version());
 
 		end($versions);
-		
-		while ($version = prev($versions)) 
+
+		while ($version = prev($versions))
 		{
 			if ($version !== $db_version) { break; }
 		}
@@ -44,7 +45,7 @@ class Rollback extends Migration implements \Craftsman\Interfaces\Command
 		}
 
 		$this->newLine();
-		$this->text('<info>'.$signal.'</info> '.$case);		
+		$this->text('<info>'.$signal.'</info> '.$case);
 
 		$time_start = microtime(true);
 
@@ -53,7 +54,7 @@ class Rollback extends Migration implements \Craftsman\Interfaces\Command
 		$time_end = microtime(true);
 
 		list($query_exec_time, $exec_queries) = $this->measureQueries($this->migration->db->queries);
-	
+
 		$this->summary($signal, $time_start, $time_end, $query_exec_time, $exec_queries);
 	}
 }

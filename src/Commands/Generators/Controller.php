@@ -15,6 +15,7 @@ class Controller extends Generator implements \Craftsman\Interfaces\Command
 {
 	protected $name        = 'generate:controller';
 	protected $description = 'Generate a Controller';
+	protected $aliases 		 = ['g:controller'];
 
 	public function start()
 	{

@@ -16,6 +16,7 @@ class Version extends Migration implements \Craftsman\Interfaces\Command
 {
 	protected $name        = 'migrate:version';
 	protected $description = 'Run a specific migration';
+	protected $aliases 		 = ['m:version'];
 
 	protected function configure()
 	{

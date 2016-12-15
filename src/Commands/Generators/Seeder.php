@@ -15,6 +15,7 @@ class Seeder extends Generator implements \Craftsman\Interfaces\Command
 {
 	protected $name        = 'generate:seeder';
 	protected $description = 'Generate a Seeder';
+	protected $aliases 		 = ['g:seeder'];
 
 	public function start()
 	{

@@ -15,6 +15,7 @@ class Latest extends Migration implements \Craftsman\Interfaces\Command
 {
 	protected $name        = 'migrate:latest';
 	protected $description = 'Run the latest migration';
+	protected $aliases 		 = ['m:latest'];
 
 	public function start()
 	{
@@ -26,10 +27,10 @@ class Latest extends Migration implements \Craftsman\Interfaces\Command
 		{
 			return $this->note('Database is up-to-date');
 		}
-		elseif ($version > $db_version) 
+		elseif ($version > $db_version)
 		{
 			$this->text(
-				'Migrating database <info>UP</info> to version ' 
+				'Migrating database <info>UP</info> to version '
 				.'<comment>'.$version.'</comment> from <comment>'.$db_version.'</comment>'
 			);
 			$case = 'migrating';
@@ -43,10 +44,10 @@ class Latest extends Migration implements \Craftsman\Interfaces\Command
 			);
 			$case = 'reverting';
 			$signal = '--';
-		}	
+		}
 
 		$this->newLine();
-		$this->text('<info>'.$signal.'</info> '.$case);		
+		$this->text('<info>'.$signal.'</info> '.$case);
 
 		$time_start = microtime(true);
 
@@ -55,7 +56,7 @@ class Latest extends Migration implements \Craftsman\Interfaces\Command
 		$time_end = microtime(true);
 
 		list($query_exec_time, $exec_queries) = $this->measureQueries($this->migration->db->queries);
-		
+
 		$this->summary($signal, $time_start, $time_end, $query_exec_time, $exec_queries);
 	}
 }

@@ -15,6 +15,7 @@ class Reset extends Migration implements \Craftsman\Interfaces\Command
 {
 	protected $name        = 'migrate:reset';
 	protected $description = 'Rollback all migrations';
+	protected $aliases 		 = ['m:reset'];
 
 	public function start()
 	{
@@ -28,7 +29,7 @@ class Reset extends Migration implements \Craftsman\Interfaces\Command
 		$signal = '--';
 
 		$this->newLine();
-		$this->text('<info>'.$signal.'</info> '.$case);		
+		$this->text('<info>'.$signal.'</info> '.$case);
 
 		$time_start = microtime(true);
 
@@ -37,7 +38,7 @@ class Reset extends Migration implements \Craftsman\Interfaces\Command
 		$time_end = microtime(true);
 
 		list($query_exec_time, $exec_queries) = $this->measureQueries($this->migration->db->queries);
-		
+
 		$this->summary($signal, $time_start, $time_end, $query_exec_time, $exec_queries);
 	}
 }
