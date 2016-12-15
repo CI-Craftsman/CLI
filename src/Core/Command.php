@@ -32,6 +32,12 @@ abstract class Command extends SymfonyCommand
     protected $description;
 
     /**
+     * Console command aliases
+     * @var string[]
+     */
+    protected $aliases = [];
+
+    /**
      * InputInterface instance
      * @var object
      */
@@ -56,7 +62,8 @@ abstract class Command extends SymfonyCommand
     {
         $this
             ->setName($this->name)
-            ->setDescription($this->description);
+            ->setDescription($this->description)
+            ->setAliases($this->aliases);
     }
 
     /**
