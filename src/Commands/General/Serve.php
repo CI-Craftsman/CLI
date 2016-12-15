@@ -72,11 +72,7 @@ class Serve extends Command
     $this->text("Codeigniter development server started on http://{$host}:{$port}/");
 
     $command = "{$binary} -S {$host}:{$port} {$base}/utils/server.php";
-
-    if ($docpath)
-    {
-      $command.=' -t {$docroot}';
-    }
+    $docpath && $command.=' -t {$docroot}';
 
     $process = new Process($command);
     $docpath && $process->setWorkingDirectory($docpath);
