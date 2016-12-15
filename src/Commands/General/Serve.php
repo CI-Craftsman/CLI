@@ -79,9 +79,9 @@ class Serve extends Command
     $process->setTimeout(0);
     $process->run();
 
-    if (! $process->isSuccessful()) {
+    if (! $process->isSuccessful())
+    {
       throw new ProcessFailedException($process);
     }
-    echo $process->getOutput().'lalala';
   }
 }
