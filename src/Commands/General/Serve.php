@@ -63,19 +63,29 @@ class Serve extends Command
   {
     $host    = $this->getOption('host');
     $port    = intval($this->getOption('port'));
+    $docpath = realpath($this->getOption('docroot')? $this->getOption('docroot'): '.');
+
     $base    = ProcessUtils::escapeArgument(CRAFTSMANPATH);
     $binary  = ProcessUtils::escapeArgument((new PhpExecutableFinder)->find(false));
-    $docroot = ProcessUtils::escapeArgument($this->getOption('docroot')? $this->getOption('docroot'): '.');
+    $docroot = ProcessUtils::escapeArgument($docpath);
 
     $this->text("Codeigniter development server started on http://{$host}:{$port}/");
 
-    $command = "{$binary} -S {$host}:{$port} -t {$docroot} {$base}/utils/server.php";
+    $command = "{$binary} -S {$host}:{$port} {$base}/utils/server.php";
+
+    if ($docpath)
+    {
+      $command.=' -t {$docroot}';
+    }
+
     $process = new Process($command);
+    $docpath && $process->setWorkingDirectory($docpath);
     $process->setTimeout(0);
     $process->run();
 
     if (! $process->isSuccessful()) {
       throw new ProcessFailedException($process);
     }
+    echo $process->getOutput().'lalala';
   }
 }
