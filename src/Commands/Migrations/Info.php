@@ -14,9 +14,10 @@ use Symfony\Component\Console\Helper\TableSeparator;
  */
 class Info extends Migration implements \Craftsman\Interfaces\Command
 {
-	protected $name        = 'migrate:check';
+	protected $name        = 'migrate:info';
 	protected $description = 'Display the current migration scheme';
 	protected $harmless    = TRUE;
+	protected $aliases 		 = ['m:info', 'db:info'];
 
 	public function start()
 	{
@@ -25,18 +26,18 @@ class Info extends Migration implements \Craftsman\Interfaces\Command
 		$latest_version = $this->migration->get_latest_version($migrations);
 
 		$this->table(
-			array('Name', 'Type', 'Local version', 'Database version'),
-			array(
-				array(
+			['Name', 'Type', 'Database version'],
+			[
+				[
 					$this->migration->get_module_name(),
 					$this->migration->get_type(),
-					$latest_version,
 					$db_version
-				)
-			)
+				]
+			]
 		);
 
 		$this->text("Migration directory: ". basename($this->migration->get_module_path()).'/');
+		$this->text("Local version: {$latest_version}");
 
 		if ($latest_version < $db_version)
 		{
