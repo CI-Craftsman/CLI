@@ -46,7 +46,8 @@ $database = [
 
 $general = [
 	new Craftsman\Commands\General\Serve,
-	new Craftsman\Commands\General\Console
+	new Craftsman\Commands\General\Console,
+	new Craftsman\Commands\General\Notes
 ];
 
 // Set the commands
