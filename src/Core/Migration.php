@@ -77,7 +77,6 @@ abstract class Migration extends Command
     {
       // Create a Codeigniter instance
       $codeigniter = new Codeigniter();
-
       $this->CI =& $codeigniter->get();
       // Add the Craftsman extended packages
       $this->CI->load->add_package_path(CRAFTSMANPATH.'utils/extend/');
@@ -103,6 +102,7 @@ abstract class Migration extends Command
         ($this->getOption('sequential') !== FALSE) && $params['migration_type'] = 'sequential';
         $this->CI->load->library('migration', $params);
         $this->migration = $this->CI->migration;
+        $this->migration->db->queries = [];
       }
       else
       {
