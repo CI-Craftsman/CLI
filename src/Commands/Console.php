@@ -20,6 +20,7 @@ class Console extends Command
 {
   protected $name        = 'console';
   protected $description = 'Interact with your application';
+  protected $aliases     = ['c'];
 
   protected $commandWhitelist = [
     'generate:controller',
