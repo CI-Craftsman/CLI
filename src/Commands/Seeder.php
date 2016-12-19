@@ -1,5 +1,5 @@
 <?php
-namespace Craftsman\Commands\Database;
+namespace Craftsman\Commands;
 
 use Craftsman\Core\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -29,19 +29,19 @@ class Seeder extends Command
     {
     	parent::configure();
 
-        $this
-            ->addArgument(
-                'name',
-                InputArgument::REQUIRED,
-                'Seeder filename'
-            )
-            ->addOption(
-                'path',
-                NULL,
-                InputOption::VALUE_REQUIRED,
-                'Set the migration path',
-                'application/seeders/'
-            );
+      $this
+        ->addArgument(
+            'name',
+            InputArgument::REQUIRED,
+            'Seeder filename'
+        )
+        ->addOption(
+            'path',
+            NULL,
+            InputOption::VALUE_REQUIRED,
+            'Set the migration path',
+            'application/seeders/'
+        );
     }
 
     /**
@@ -63,45 +63,45 @@ class Seeder extends Command
         }
         try
         {
-            $name = ucfirst($this->getArgument('name'));
-            $path = rtrim($this->getOption('path'),'/').'/';
+          $name = ucfirst($this->getArgument('name'));
+          $path = rtrim($this->getOption('path'),'/').'/';
 
-            if (file_exists($file = $path . $name . '.php'))
-            {
-                require_once $file;
-            }
-            elseif (file_exists($file = APPPATH.'seeders/'.$name.'.php'))
-            {
-                require_once $file;
-            }
-            else
-            {
-                throw new \RuntimeException("Seeder does not exist.");
-            }
+          if (file_exists($file = $path . $name . '.php'))
+          {
+            require_once $file;
+          }
+          elseif (file_exists($file = APPPATH.'seeders/'.$name.'.php'))
+          {
+            require_once $file;
+          }
+          else
+          {
+            throw new \RuntimeException("Seeder does not exist.");
+          }
 
-            $obj = new $name();
+          $obj = new $name();
+          $obj->db->queries = [];
 
-            if (! method_exists($obj, 'run'))
-            {
-                throw new \RuntimeException("{$name} Seeder class does not contain a Seeder::run method");
-            }
+          if (! method_exists($obj, 'run'))
+          {
+            throw new \RuntimeException("{$name} Seeder class does not contain a Seeder::run method");
+          }
 
-            $case = 'seeding';
-            $signal = '++';
+          $case = 'seeding';
+          $signal = '++';
 
-            $this->newLine();
-            $this->text('<info>'.$signal.'</info> '.$case);
+          $this->newLine();
+          $this->text('<info>'.$signal.'</info> '.$case);
 
-            $time_start = microtime(true);
+          $time_start = microtime(true);
 
-            $obj->run();
+          $obj->run();
 
-            $time_end = microtime(true);
+          $time_end = microtime(true);
 
-            list($query_exec_time, $exec_queries) = $this->measureQueries($obj->db->queries, $obj->db->query_times);
+          list($query_exec_time, $exec_queries) = $this->measureQueries($obj->db->queries, $obj->db->query_times);
 
-            $this->summary($signal, $time_start, $time_end, $query_exec_time, $exec_queries);
-
+          $this->summary($signal, $time_start, $time_end, $query_exec_time, $exec_queries);
         }
         catch (\Exception $e)
         {

@@ -1,5 +1,5 @@
 <?php
-namespace Craftsman\Commands\General;
+namespace Craftsman\Commands;
 
 use Craftsman\Core\Command;
 use Symfony\Component\Process\ProcessUtils;

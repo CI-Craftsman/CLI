@@ -40,18 +40,15 @@ $migrations = [
 	new Craftsman\Commands\Migrations\Refresh
 ];
 
-$database = [
-	new Craftsman\Commands\Database\Seeder
-];
-
 $general = [
-	new Craftsman\Commands\General\Serve,
-	new Craftsman\Commands\General\Console,
-	new Craftsman\Commands\General\Notes
+	new Craftsman\Commands\Serve,
+	new Craftsman\Commands\Console,
+	new Craftsman\Commands\Notes,
+	new Craftsman\Commands\Seeder
 ];
 
 // Set the commands
-$commands = array_merge($generators, $migrations, $database, $general);
+$commands = array_merge($generators, $migrations, $general);
 
 $application = new Application('Craftsman', '4.2.0');
 // Add the default commands

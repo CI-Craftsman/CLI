@@ -1,5 +1,5 @@
 <?php
-namespace Craftsman\Commands\General;
+namespace Craftsman\Commands;
 
 use Craftsman\Core\Command;
 use Craftsman\Core\Codeigniter;
