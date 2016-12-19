@@ -65,6 +65,14 @@ class Console extends Command
 
       $CI =& $codeigniter->get();
 
+      $this->writeln([
+        'Craftsman v'.$this->getApplication()->getVersion().' Console',
+        '---------------------------------------------------------------',
+        'Codeigniter : $CI',
+        'Path: ./'.basename(FCPATH).'/'.basename(APPPATH),
+        '---------------------------------------------------------------'
+      ]);
+
       $shell->setScopeVariables(['CI' => $CI]);
       $shell->addCommands($this->getCommands());
       $shell->run();

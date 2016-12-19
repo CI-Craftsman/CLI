@@ -83,6 +83,9 @@ abstract class Migration extends Command
       // Load the special migration settings
       $this->CI->config->load('migration', TRUE, TRUE);
 
+      $appDir = realpath(APPPATH.'../');
+      $this->text('(in ./'.basename($appDir).'/'.basename(APPPATH).'/)');
+
       if (! $this->harmless)
       {
         #$message = "WARNING! .\n ";
@@ -95,8 +98,6 @@ abstract class Migration extends Command
       }
       if ($params = $this->CI->config->item('migration'))
       {
-        $appDir = realpath(APPPATH.'../');
-        $this->text('(in ~/'.basename($appDir).'/'.basename(APPPATH).'/)');
         $this->newLine();
 
         ($this->getOption('sequential') !== FALSE) && $params['migration_type'] = 'sequential';

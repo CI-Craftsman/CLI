@@ -138,8 +138,10 @@ abstract class Command extends SymfonyCommand
               return call_user_func_array(array($this->_input,'getArgument'), $arguments);
             case 'getOption':
               return call_user_func_array(array($this->_input, 'getOption'), $arguments);
+            case 'writeln':
+              return call_user_func_array(array($this->_output, 'writeln'), $arguments);
             default:
-              throw new \Exception("Codeigniter\Command: [{$name}] method not found.");
+              throw new \Exception("Craftsman\Command: [{$name}] method not found.");
 
         }
     }
