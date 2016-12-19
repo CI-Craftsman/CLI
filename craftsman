@@ -50,7 +50,7 @@ $general = [
 // Set the commands
 $commands = array_merge($generators, $migrations, $general);
 
-$application = new Application('Craftsman', '4.2.0');
+$application = new Application('Craftsman', '4.2.3');
 // Add the default commands
 foreach ($commands as $key => $command) {
 	$application->add($command);
