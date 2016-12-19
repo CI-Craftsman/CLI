@@ -36,5 +36,8 @@
     "branch-alias": {
       "dev-master": "4.0.x-dev"
     }
+  },
+  "require-dev": {
+    "fzaninotto/faker": "^1.6"
   }
 }
