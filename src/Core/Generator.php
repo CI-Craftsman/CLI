@@ -68,19 +68,7 @@ abstract class Generator extends Command
         NULL,
         InputOption::VALUE_NONE,
         'If set, the task will force the generation process'
-      )
-      // ->addOption(
-      //   'timestamp',
-      //   NULL,
-      //   InputOption::VALUE_NONE,
-      //   'If set, the migration will run with timestamp mode active'
-    	// )
-			->addOption(
-				'sequential',
-				NULL,
-				InputOption::VALUE_NONE,
-				'If set, the migration will run with sequential mode active'
-			);
+      );
     }
 
   /**
