@@ -1,5 +1,5 @@
 <?php
-namespace Craftsman\Core;
+namespace Craftsman\Database;
 
 use Craftsman\Core\Codeigniter;
 
@@ -41,9 +41,11 @@ abstract class Seeder
 	public function __construct()
 	{
 		$CI = new Codeigniter();
+
 		$this->CI =& $CI->get();
 		$this->CI->load->database();
 		$this->CI->load->dbforge();
+
 		$this->db = $this->CI->db;
 		$this->dbforge = $this->CI->dbforge;
 	}
