@@ -1,6 +1,6 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php
 
-use Craftsman\Classes\Seeder;
+use Craftsman\Database\Seeder;
 
 class {{NAME}} extends Seeder
 {
@@ -10,7 +10,7 @@ class {{NAME}} extends Seeder
 	{
 		$this->db->truncate($this->table);
 
-		$this->db->insert($this->table, [
+		$this->db->insert_batch($this->table, [
 			# your data here
 		]);
 	}
