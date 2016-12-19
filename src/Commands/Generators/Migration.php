@@ -2,6 +2,7 @@
 namespace Craftsman\Commands\Generators;
 
 use Craftsman\Core\Generator;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
 * Generator\Migration Command
@@ -16,6 +17,19 @@ class Migration extends Generator implements \Craftsman\Interfaces\Command
 	protected $name        = 'generate:migration';
 	protected $description = 'Generate a Migration';
 	protected $aliases 		 = ['g:migration'];
+
+	public function configure()
+	{
+		parent::configure();
+
+		$this
+			->addOption(
+				'sequential',
+				NULL,
+				InputOption::VALUE_NONE,
+				'If set, the migration will run with sequential mode active'
+			);
+	}
 
 	public function start()
 	{
