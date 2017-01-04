@@ -14,17 +14,6 @@
       "email": "david.sosa.valdes@gmail.com"
     }
   ],
-  "require": {
-    "php": ">=5.5.0",
-    "symfony/console": "^3.0",
-    "symfony/filesystem": "^3.0",
-    "symfony/process": "^3.0",
-    "twig/twig" : "^1.18",
-    "codeigniter/framework": "~3.0",
-    "vlucas/phpdotenv": "^2.4",
-    "psy/psysh": "@stable",
-    "symfony/finder": "^3.2"
-  },
   "autoload": {
     "psr-4": { "Craftsman\\": "src/" }
   },
@@ -32,12 +21,20 @@
     "issues": "https://github.com/davidsosavaldes/Craftsman/issues"
   },
   "bin": ["craftsman"],
+  "require": {
+    "php": ">=5.5.0",
+    "codeigniter/framework": "~3.0",
+    "twig/twig" : "^1.18",
+    "vlucas/phpdotenv": "^2.4",
+    "psy/psysh": "@stable",
+    "symfony/console": "^3.0",
+    "symfony/finder": "^3.2",
+    "symfony/filesystem": "^3.0",
+    "symfony/process": "^3.0"
+  },
   "extra": {
     "branch-alias": {
       "dev-master": "4.0.x-dev"
     }
-  },
-  "require-dev": {
-    "fzaninotto/faker": "^1.6"
   }
 }

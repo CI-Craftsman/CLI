@@ -47,8 +47,12 @@ $general = [
 	new Craftsman\Commands\Seeder
 ];
 
+$documentation = [
+	new Craftsman\Commands\Documentation\Application
+];
+
 // Set the commands
-$commands = array_merge($generators, $migrations, $general);
+$commands = array_merge($generators, $migrations, $general, $documentation);
 
 $application = new Application('Craftsman', '4.2.3');
 // Add the default commands
