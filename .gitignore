@@ -1,7 +1,3 @@
 .DS_Store
 /vendor/
 composer.lock
-_site
-.sass-cache
-.jekyll-metadata
-/tests/integration/.craftsman

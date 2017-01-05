@@ -38,6 +38,6 @@
     }
   },
   "require-dev": {
-    "fzaninotto/faker": "^1.6"
+    "phpunit/phpunit": "^5.7"
   }
 }
