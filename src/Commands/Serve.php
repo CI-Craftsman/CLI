@@ -60,28 +60,50 @@ class Serve extends Command
    * @throws \Exception
    */
   public function start()
-  {
+  { 
     $host    = $this->getOption('host');
     $port    = intval($this->getOption('port'));
-    $docpath = realpath($this->getOption('docroot')? $this->getOption('docroot'): '.');
+    $docpath = $this->getOption('docroot')? $this->getOption('docroot') : '.';
 
     $base    = ProcessUtils::escapeArgument(CRAFTSMANPATH);
     $binary  = ProcessUtils::escapeArgument((new PhpExecutableFinder)->find(false));
     $docroot = ProcessUtils::escapeArgument($docpath);
 
-    $this->text("Codeigniter development server started on http://{$host}:{$port}/");
+    $this->writeln("Codeigniter development server started at " . date(DATE_RFC2822));
+    $this->writeln("Listening on http://{$host}:{$port}");
+    $this->writeln("Document root is ". realpath($docpath));
+    $this->writeln("Press Ctrl-C to quit.");
 
-    $command = "{$binary} -S {$host}:{$port} {$base}/utils/server.php";
-    $docpath && $command.=' -t {$docroot}';
+    $req_blacklist = [
+      'Invalid request (Unexpected EOF)'
+    ];
 
-    $process = new Process($command);
-    $docpath && $process->setWorkingDirectory($docpath);
-    $process->setTimeout(0);
-    $process->run();
-
-    if (! $process->isSuccessful())
+    try 
     {
-      throw new ProcessFailedException($process);
+      $process = new Process("{$binary} -S {$host}:{$port} {$base}/utils/server.php -t {$docroot}"); 
+
+      $process
+        ->setWorkingDirectory($docpath)
+        ->setTimeout(0)
+        ->setPTY(true)
+        ->mustRun(function($type, $buffer) use ($req_blacklist) {      
+          foreach (explode("\n", rtrim($buffer, "\n")) as $output) 
+          {
+            $req = substr(strrchr($output, ' '), 1);
+            if (! in_array($req, $req_blacklist)) 
+            {
+              if ($response = (strpos($output, '[200]') !== FALSE)) 
+              {
+                $output = str_replace($req, "<info>{$req}</info>", $output);
+              }
+              $this->writeln($output); 
+            }
+          }
+        });      
+    } 
+    catch (ProcessFailedException $e) 
+    {
+      throw new Exception("Error Processing Request: {$e->getMessage()}");
     }
   }
 }
