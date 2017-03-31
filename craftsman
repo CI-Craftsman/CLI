@@ -13,14 +13,17 @@ require_once(__DIR__.'/utils/bootstrap.php');
  * @link       https://github.com/davidsosavaldes/Craftsman
  * @copyright  Copyright (c) 2016, David Sosa Valdes.
  */
-try {
+try 
+{
 	$dotenv = new Dotenv(getcwd(), '.craftsman');
 	$dotenv->load();
-	$dotenv->required(['VENDOR_PATH','CI_APPPATH'])->notEmpty();
+	$dotenv->required(['CI_BASEPATH','CI_APPPATH'])->notEmpty();
 
 	define('CRAFTSMANPATH', __DIR__.'/');
 
-} catch (Exception $e) {
+} 
+catch (Exception $e) 
+{
 	exit(preg_replace('/\s+/', ' ', $e->getMessage()));
 }
 

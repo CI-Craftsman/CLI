@@ -12,7 +12,7 @@
 
 define('ENVIRONMENT', getenv('CI_ENV') ? getenv('CI_ENV') : 'development');
 
-$system_path        = getenv('VENDOR_PATH').'codeigniter/framework/system/';
+$system_path        = getenv('CI_BASEPATH');
 $application_folder = getenv('CI_APPPATH');
 $public_folder      = getenv('CI_FCPATH');
 
@@ -113,6 +113,7 @@ load_class('Security', 'core');
 // load_class('Router', 'core');
 load_class('Input', 'core');
 load_class('Lang', 'core');
+load_class('Hooks', 'core');
 
 require_once(BASEPATH.'core/Controller.php');
 
