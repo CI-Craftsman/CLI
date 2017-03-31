@@ -39,15 +39,15 @@ class Reporter
 		{
 			if (is_object($cobject))
 			{
-				if ($cobject instanceof CI_DB)
+				if ($cobject instanceof \CI_DB)
 				{
 					$dbs[get_class($this->CI).':$'.$name] = $cobject;
 				}
-				elseif ($cobject instanceof CI_Model)
+				elseif ($cobject instanceof \CI_Model)
 				{
 					foreach (get_object_vars($cobject) as $mname => $mobject)
 					{
-						if ($mobject instanceof CI_DB)
+						if ($mobject instanceof \CI_DB)
 						{
 							$dbs[get_class($cobject).':$'.$mname] = $mobject;
 						}
