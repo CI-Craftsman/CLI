@@ -74,7 +74,7 @@ class Serve extends Command
     $this->writeln("Document root is ". realpath($docpath));
     $this->writeln("Press Ctrl-C to quit.");
 
-    $req_blacklist = ['EOF'];
+    $req_blacklist = ['EOF)'];
 
     try 
     {
