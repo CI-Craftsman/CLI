@@ -19,11 +19,10 @@
     "symfony/console": "^3.0",
     "symfony/filesystem": "^3.0",
     "symfony/process": "^3.0",
+    "symfony/finder": "^3.2",
     "twig/twig" : "^1.18",
-    "codeigniter/framework": "~3.0",
     "vlucas/phpdotenv": "^2.4",
-    "psy/psysh": "@stable",
-    "symfony/finder": "^3.2"
+    "psy/psysh": "@stable"
   },
   "autoload": {
     "psr-4": { "Craftsman\\": "src/" }
