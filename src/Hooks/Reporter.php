@@ -1,8 +1,8 @@
-<?php 
+<?php
 namespace Craftsman\Hooks;
 
 /**
-* 
+*
 */
 class Reporter
 {
@@ -13,24 +13,18 @@ class Reporter
 	{
 		$this->CI =& get_instance();
 		$this->fh = fopen('php://stdout','a'); //both (a)ppending, and (w)riting will work
-		fwrite($this->fh, "\n");
-	}
-
-	public function __destruct()
-	{
-		fclose($this->fh); 
 	}
 
 	public function request()
 	{
-		$from 		= $this->CI->uri->uri_string();
+		$from = $this->CI->uri->uri_string();
 		$index_page = $this->CI->config->item('index_page');
-		$namespace 	= (! empty($index_page))? "/{$index_page}" : NULL;
-		$date 		= date('D M t h:i:s Y'); 
-		$pid 		= getmypid();
-		$status 	= http_response_code();
+		$namespace = (! empty($index_page))? "/{$index_page}" : NULL;
+		$date = date('D M t h:i:s Y');
+		$pid = getmypid();
+		$status = http_response_code();
 
-		fwrite($this->fh, "[{$date}] ::{$pid} [{$status}]: <info>{$namespace}/{$from}</info>");
+		fwrite($this->fh, "[{$date}] ::{$pid} [{$status}]: <info>{$namespace}/{$from}</info>\n");
 	}
 
 	public function queries()
@@ -39,11 +33,7 @@ class Reporter
 		{
 			if (is_object($cobject))
 			{
-				if ($cobject instanceof \CI_DB)
-				{
-					$dbs[get_class($this->CI).':$'.$name] = $cobject;
-				}
-				elseif ($cobject instanceof \CI_Model)
+				if ($cobject instanceof \CI_Model)
 				{
 					foreach (get_object_vars($cobject) as $mname => $mobject)
 					{
@@ -53,20 +43,24 @@ class Reporter
 						}
 					}
 				}
+				elseif ($cobject instanceof \CI_DB)
+				{
+					$dbs[get_class($this->CI).':$'.$name] = $cobject;
+				}
 			}
 		}
 
-		if (isset($dbs)) 
+		if (isset($dbs))
 		{
-			foreach ($dbs as $name => $db) 
+			foreach ($dbs as $name => $db)
 			{
 				foreach ($db->queries as $key => $val)
 				{
 					$time = number_format($db->query_times[$key], 4);
-					$val = trim(preg_replace('/\s+/', ' ', $val));	
+					$val = trim(preg_replace('/\s+/', ' ', $val));
 
 					fwrite($this->fh, "<fg=cyan;bg=black>{$name} ({$time})</> <options=bold>{$val}</>\n");
-				}			
+				}
 			}
 		}
 	}
@@ -75,7 +69,7 @@ class Reporter
 	{
 		$repeater = rtrim(str_repeat('../', substr_count(APPPATH, '/')),'/');
 		return [
-			'pre_controller' => [
+			'post_controller_constructor' => [
 			    'class'    => '\Craftsman\Hooks\Reporter',
 			    'function' => 'request',
 			    'filename' => 'Reporter.php',
@@ -87,6 +81,11 @@ class Reporter
 			    'filename' => 'Reporter.php',
 			    'filepath' => "{$repeater}".__DIR__
 			]
-		];	
-	}	
+		];
+	}
+
+	public function __destruct()
+	{
+		fclose($this->fh);
+	}
 }
