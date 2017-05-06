@@ -13,9 +13,9 @@ use Craftsman\Core\Migration;
  */
 class Refresh extends Migration implements \Craftsman\Interfaces\Command
 {
-	protected $name        = 'migrate:refresh';
-	protected $description = 'Rollback all migrations and run them all again';
-	protected $aliases 		 = ['m:refresh'];
+	protected $name        	= 'migrate:refresh';
+	protected $description 	= 'Rollback all migrations and run them all again';
+	protected $aliases 		= ['m:refresh'];
 
 	public function start()
 	{

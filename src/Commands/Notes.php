@@ -19,15 +19,6 @@ class Notes extends Command
   protected $description = 'Enumerate all annotations';
 
   /**
-   * Command configuration method.
-   * Configure all the arguments and options.
-   */
-  protected function configure()
-  {
-    parent::configure();
-  }
-
-  /**
    * Execute the console command.
    *
    * @return void
@@ -35,21 +26,22 @@ class Notes extends Command
    */
   public function start()
   {
-    $codeigniter = new Codeigniter();
-    $CI =& $codeigniter->get();
+    $instance = new Codeigniter();
+    $finder   = new Finder();
+    $basepath = basename(APPPATH);
+    $found    = [];
 
-    $finder = new Finder();
+    $CI =& $instance->get();
     $finder->ignoreUnreadableDirs()->files()->name('*.php')->in(APPPATH);
 
-    $basepath = basename(APPPATH);
-
-    $found = [];
-
-    foreach ($finder as $file) {
+    foreach ($finder as $file) 
+    {
       $_file = new \SplFileObject($file->getRealPath());
+
       foreach ($_file as $k => $line)
       {
         $exp = preg_match('/TODO|FIXME/', $line);
+        
         if ($exp > 0)
         {
           $line = str_replace(['//','#','TODO:','FIXME:'], ['','','[TODO]','[FIXME]'], trim($line));

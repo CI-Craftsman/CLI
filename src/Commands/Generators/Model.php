@@ -13,15 +13,16 @@ use Craftsman\Core\Generator;
  */
 class Model extends Generator implements \Craftsman\Interfaces\Command
 {
-	protected $name        = 'generate:model';
-	protected $description = 'Generate a Model';
-	protected $aliases 		 = ['g:model'];
+	protected $name        	= 'generate:model';
+	protected $description 	= 'Generate a Model';
+	protected $aliases 		= ['g:model'];
 
 	public function start()
 	{
-    $filename = ucfirst($this->getArgument('filename'));
-    $basepath = rtrim($this->getOption('path'),'/');
-		$appdir = basename($basepath);
+    	$filename = ucfirst($this->getArgument('filename'));
+    	$basepath = rtrim($this->getOption('path'),'/');
+		$appdir   = basename($basepath);
+		
 		$basepath.= '/models/';
 
 		$this->text("Controller path: <comment>{$appdir}/models</comment>");
@@ -36,7 +37,7 @@ class Model extends Generator implements \Craftsman\Interfaces\Command
 	    	$test_file = $basepath.$filename.'_model.php';
 
 	    	$options = array(
-	    		'NAME' 			 => $filename.'_model',
+	    		'NAME' 		 => $filename.'_model',
 	    		'COLLECTION' => $filename,
 	    		'FILENAME'   => basename($test_file),
 	    		'PATH'       => "./{$appdir}/models"

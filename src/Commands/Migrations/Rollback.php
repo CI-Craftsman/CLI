@@ -13,9 +13,9 @@ use Craftsman\Core\Migration;
  */
 class Rollback extends Migration implements \Craftsman\Interfaces\Command
 {
-	protected $name        = 'migrate:rollback';
-	protected $description = 'Rollback from the last migration';
-	protected $aliases 		 = ['m:rollback'];
+	protected $name        	= 'migrate:rollback';
+	protected $description 	= 'Rollback from the last migration';
+	protected $aliases 		= ['m:rollback'];
 
 	public function start()
 	{

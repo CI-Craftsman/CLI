@@ -96,7 +96,9 @@ abstract class Generator extends Command
         $function = new \Twig_SimpleFunction('argument', function ($field = "") {
           return array_combine(array('name','type'), explode(':', $field));
         });
+
         $this->_twig->addFunction($function);
+        
         foreach ($this->getArgument('options') as $option)
         {
           list($key, $value) = explode(':', $option);

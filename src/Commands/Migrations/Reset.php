@@ -13,9 +13,9 @@ use Craftsman\Core\Migration;
  */
 class Reset extends Migration implements \Craftsman\Interfaces\Command
 {
-	protected $name        = 'migrate:reset';
-	protected $description = 'Rollback all migrations';
-	protected $aliases 		 = ['m:reset'];
+	protected $name        	= 'migrate:reset';
+	protected $description 	= 'Rollback all migrations';
+	protected $aliases 		= ['m:reset'];
 
 	public function start()
 	{

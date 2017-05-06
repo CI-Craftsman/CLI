@@ -57,16 +57,14 @@ class Console extends Command
     $this->getApplication()->setCatchExceptions(false);
     try
     {
-      $codeigniter = new Codeigniter();
-      // TODO: Create a method that configures the Psy\Shell
-      $config = new Configuration;
+      $instance = new Codeigniter();
+      $config   = new Configuration; // TODO: Create a method that configures the Psy\Shell
+      $shell    = new Shell($config);
 
-      $shell = new Shell($config);
-
-      $CI =& $codeigniter->get();
+      $CI =& $instance->get();
 
       $this->writeln([
-        'Craftsman v'.$this->getApplication()->getVersion().' Console',
+        'Craftsman '.$this->getApplication()->getVersion().' Console',
         '---------------------------------------------------------------',
         'Codeigniter : $CI',
         'Path: ./'.basename(FCPATH).'/'.basename(APPPATH),
@@ -82,7 +80,6 @@ class Console extends Command
       echo $e->getMessage() . PHP_EOL;
       // TODO: this triggers the "exited unexpectedly" logic in the
       // ForkingLoop, so we can't exit(1) after starting the shell...
-      // fix this :)
       // exit(1);
     }
   }

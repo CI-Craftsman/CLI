@@ -13,9 +13,9 @@ use Craftsman\Core\Migration;
  */
 class Latest extends Migration implements \Craftsman\Interfaces\Command
 {
-	protected $name        = 'migrate:latest';
-	protected $description = 'Run the latest migration';
-	protected $aliases 		 = ['m:latest'];
+	protected $name        	= 'migrate:latest';
+	protected $description 	= 'Run the latest migration';
+	protected $aliases 		= ['m:latest'];
 
 	public function start()
 	{

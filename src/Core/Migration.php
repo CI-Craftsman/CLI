@@ -88,8 +88,8 @@ abstract class Migration extends Command
 
       if (! $this->harmless)
       {
-        #$message = "WARNING! .\n ";
         $this->note("You are about to execute a database migration that could result in schema changes and data lost");
+        
         if (! $this->confirm("Do you wish to continue?"))
         {
           $this->error('Process aborted!');
@@ -101,7 +101,9 @@ abstract class Migration extends Command
         $this->newLine();
 
         ($this->getOption('sequential') !== FALSE) && $params['migration_type'] = 'sequential';
+
         $this->CI->load->library('migration', $params);
+        
         $this->migration = $this->CI->migration;
         $this->migration->db->queries = [];
       }
@@ -121,6 +123,7 @@ abstract class Migration extends Command
     protected function setModelArguments()
     {
       $params = array('module_path' => rtrim($this->getOption('path'),'/').'/');
+      
       if ($this->getOption('name') !== FALSE)
       {
         $params['module_name'] = $this->getOption('name');

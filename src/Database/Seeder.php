@@ -40,9 +40,9 @@ abstract class Seeder
 	 */
 	public function __construct()
 	{
-		$CI = new Codeigniter();
+		$instance = new Codeigniter();
 
-		$this->CI =& $CI->get();
+		$this->CI =& $instance->get();
 		$this->CI->load->database();
 		$this->CI->load->dbforge();
 

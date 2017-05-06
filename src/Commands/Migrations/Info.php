@@ -14,10 +14,10 @@ use Symfony\Component\Console\Helper\TableSeparator;
  */
 class Info extends Migration implements \Craftsman\Interfaces\Command
 {
-	protected $name        = 'migrate:info';
-	protected $description = 'Display the current migration scheme';
-	protected $harmless    = TRUE;
-	protected $aliases 		 = ['m:info', 'db:info'];
+	protected $name        	= 'migrate:info';
+	protected $description 	= 'Display the current migration scheme';
+	protected $harmless    	= TRUE;
+	protected $aliases 		= ['m:info', 'db:info'];
 
 	public function start()
 	{

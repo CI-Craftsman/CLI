@@ -14,9 +14,9 @@ use Symfony\Component\Console\Input\InputOption;
 */
 class Migration extends Generator implements \Craftsman\Interfaces\Command
 {
-	protected $name        = 'generate:migration';
-	protected $description = 'Generate a Migration';
-	protected $aliases 		 = ['g:migration'];
+	protected $name 		= 'generate:migration';
+	protected $description 	= 'Generate a Migration';
+	protected $aliases		= ['g:migration'];
 
 	public function configure()
 	{
@@ -42,7 +42,7 @@ class Migration extends Generator implements \Craftsman\Interfaces\Command
 
 		$filename   = $this->getArgument('filename');
 		$basepath   = rtrim(preg_replace(['/migrations/','/migration/'], ['',''], $this->getOption('path')),'/');
-		$appdir 		= basename($basepath);
+		$appdir 	= basename($basepath);
 		$migrations = array();
 
 		if ($this->_filesystem->exists($basepath.'/migrations'))
@@ -52,13 +52,12 @@ class Migration extends Generator implements \Craftsman\Interfaces\Command
 			{
 				while (($entry = readdir($handle)) !== FALSE)
 				{
-					if ($entry == "." && $entry == "..")
-					{
-						continue;
-					}
+					if ($entry == "." && $entry == "..") { continue; }
+
 					if (preg_match($migration_regex, $file = basename($entry, '.php')))
 					{
 						$number = sscanf($file, '%[0-9]+', $number)? $number : '0';
+
 						if (isset($migrations[$number]))
 						{
 							throw new \RuntimeException("Cannot be duplicate migration numbers");
@@ -87,7 +86,7 @@ class Migration extends Generator implements \Craftsman\Interfaces\Command
 
 		$target_file = $target_version."_".$filename.".php";
 
-		// $this->text('(In '.$basepath.')');
+		$this->text("(In {getcwd()})");
 		$this->newLine();
 		$this->text('Migration path: <comment>'.basename($basepath).'/migrations/</comment>');
 		$this->text('Filename: <comment>'.$target_file.'</comment>');
@@ -99,34 +98,33 @@ class Migration extends Generator implements \Craftsman\Interfaces\Command
 			(! $this->_filesystem->exists($basepath.'/migrations')) && $this->_filesystem->mkdir($basepath.'/migrations');
 
 			$test_file = $basepath.'/migrations/'.$target_file;
-	    // Set the migration template arguments
-	    list($_type) = explode('_', $this->getArgument('filename'));
+	    	// Set the migration template arguments
+	    	list($_type) = explode('_', $this->getArgument('filename'));
 
-	    $options = array(
-	      'NAME'    	 => ucfirst($this->getArgument('filename')),
-	      'FILENAME' 	 => $target_file,
-	      'PATH'       => "./{$appdir}/migrations",
-	      'TABLE_NAME' => str_replace($_type.'_', '', $this->getArgument('filename')),
-	      'FIELDS'     => (array) $this->getArgument('options')
-	    );
+		    $options = array(
+			    'NAME' 		 => ucfirst($this->getArgument('filename')),
+			    'FILENAME' 	 => $target_file,
+			    'PATH' 		 => "./{$appdir}/migrations",
+			    'TABLE_NAME' => str_replace($_type.'_', '', $this->getArgument('filename')),
+			    'FIELDS' 	 => (array) $this->getArgument('options')
+		    );
 
-	    switch ($_type)
-	    {
-	   		case 'add':
-	   		case 'create':
-	   		case 'new':
-	       	$template = 'migrations/create.php.twig';
-	       	break;
-	   		case 'update':
-	   		case 'modify':
-	       	$template = 'migrations/modify.php.twig';
-	       	empty($options['FIELDS'])
-						&& $options['FIELDS'] = array('column_name:column_type');
-	       	break;
-	   		default:
-	       	$template = 'migrations/default.php.twig';
-	       	break;
-	    }
+		    switch ($_type)
+		    {
+		   		case 'add':
+		   		case 'create':
+		   		case 'new':
+		       		$template = 'migrations/create.php.twig';
+		       		break;
+		   		case 'update':
+		   		case 'modify':
+		       		$template = 'migrations/modify.php.twig';
+		       		empty($options['FIELDS']) && $options['FIELDS'] = array('column_name:column_type');
+			       	break;
+		   		default:
+		       		$template = 'migrations/default.php.twig';
+		       		break;
+		    }
 
 			if ($this->make($test_file, $template, $options))
 			{
