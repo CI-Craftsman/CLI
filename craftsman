@@ -15,7 +15,7 @@ require_once(__DIR__.'/utils/bootstrap.php');
  */
 try 
 {
-	$dotenv = new Dotenv(getcwd(), '.craftsman');
+	$dotenv = new Dotenv(getcwd(), '.env');
 	$dotenv->load();
 	$dotenv->required(['CI_BASEPATH','CI_APPPATH'])->notEmpty();
 
