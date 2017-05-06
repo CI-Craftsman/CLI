@@ -17,14 +17,13 @@ class Reporter
 
 	public function request()
 	{
-		$from = $this->CI->uri->uri_string();
-		$index_page = $this->CI->config->item('index_page');
-		$namespace = (! empty($index_page))? "/{$index_page}" : NULL;
-		$date = date('D M t h:i:s Y');
-		$pid = getmypid();
+		$date 	= date('D M t h:i:s Y', $_SERVER['REQUEST_TIME']);
+		$addr 	= $_SERVER['REMOTE_ADDR'];
+		$port 	= $_SERVER['REMOTE_PORT'];
 		$status = http_response_code();
-
-		fwrite($this->fh, "[{$date}] ::{$pid} [{$status}]: <info>{$namespace}/{$from}</info>\n");
+		$uri 	= $_SERVER['REQUEST_URI'];
+		
+		fwrite($this->fh, "[{$date}] {$addr}:{$port} [{$status}]: <info>{$uri}</info>\n");
 	}
 
 	public function queries()
