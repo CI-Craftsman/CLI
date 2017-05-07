@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/CI-Craftsman/CLI.svg?branch=master)](https://travis-ci.org/CI-Craftsman/CLI)
+[![Build Status](https://travis-ci.org/CI-Craftsman/CLI.svg?branch=master)](https://travis-ci.org/CI-Craftsman/CLI) [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/davidsosavaldes)
 
 **Documentation for Craftsman is available at [https://ci-craftsman.github.io/documentation/](https://ci-craftsman.github.io/documentation/).**
 
