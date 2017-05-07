@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/CI-Craftsman/CLI.svg?branch=master)](https://travis-ci.org/CI-Craftsman/CLI)
+
 **Documentation for Craftsman is available at [https://ci-craftsman.github.io/documentation/](https://ci-craftsman.github.io/documentation/).**
 
 # Craftsman CLI
