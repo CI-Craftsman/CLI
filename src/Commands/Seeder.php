@@ -2,6 +2,7 @@
 namespace Craftsman\Commands;
 
 use Craftsman\Core\Command;
+use Craftsman\Core\Codeigniter;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,6 +19,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Seeder extends Command
 {
+    use \Craftsman\Traits\Migration\Info;
+
     protected $name        = 'db:seed';
     protected $description = 'Seed database with test data';
 
@@ -34,13 +37,6 @@ class Seeder extends Command
             'name',
             InputArgument::REQUIRED,
             'Seeder filename'
-        )
-        ->addOption(
-            'path',
-            NULL,
-            InputOption::VALUE_REQUIRED,
-            'Set the migration path',
-            'application/seeders/'
         );
     }
 
@@ -53,8 +49,8 @@ class Seeder extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = 'WARNING! You are about to execute a database seed operation that could '
-          .'result data lost. Do you wish to continue?';
+        $message = "WARNING! You are about to execute a database seed operation that could "
+          ."result data lost.\n Do you wish to continue?";
 
         if (! $this->confirm($message))
         {
@@ -63,35 +59,35 @@ class Seeder extends Command
         }
         try
         {
-          $name = ucfirst($this->getArgument('name'));
-          $path = rtrim($this->getOption('path'),'/').'/';
+          $filename = ucfirst($this->getArgument('name'));
+          $appPath  = realpath(getenv('CI_APPPATH'));
+          $appDir   = basename($appPath);
 
-          if (file_exists($file = $path . $name . '.php'))
-          {
-            require_once $file;
-          }
-          elseif (file_exists($file = APPPATH.'seeders/'.$name.'.php'))
+          if (file_exists($file = sprintf('%s/seeders/%s.php', $appPath, $filename)))
           {
             require_once $file;
           }
           else
           {
-            throw new \RuntimeException("Seeder does not exist.");
+            throw new \RuntimeException('Seeder does not exist.');
           }
 
-          $obj = new $name();
+          $obj = new $filename(new Codeigniter);
           $obj->db->queries = [];
 
           if (! method_exists($obj, 'run'))
           {
-            throw new \RuntimeException("{$name} Seeder class does not contain a Seeder::run method");
+            throw new \RuntimeException(sprintf(
+              '[%s] Seeder class does not contain a Seeder::run method',
+              $filename
+            ));
           }
 
           $case = 'seeding';
           $signal = '++';
 
           $this->newLine();
-          $this->text('<info>'.$signal.'</info> '.$case);
+          $this->text(sprintf('<info>%s</info> %s', $signal, $case));
 
           $time_start = microtime(true);
 
@@ -125,31 +121,10 @@ class Seeder extends Command
 
         for ($i = 0; $i < count($queries); $i++)
         {
-            $this->text('<comment>-></comment> '.$queries[$i]);
+            $this->text(sprintf('<comment>-></comment> %s', $queries[$i]));
             $query_exec_time += $times[$i];
             $exec_queries += 1;
         }
         return array($query_exec_time, $exec_queries);
-    }
-
-    /**
-     * Display in the console all the processes
-     *
-     * @param  string $signal           Migration command signal (++,--)
-     * @param  float  $time_start       Unix timestamp with microseconds from the start of process
-     * @param  float  $time_end         Unix timestamp with microseconds from the end of process
-     * @param  float  $query_exec_time  Queries execution time in seconds
-     * @param  int    $exec_queries     Amount of executed queries
-     */
-    protected function summary($signal = NULL, $time_start, $time_end, $query_exec_time, $exec_queries)
-    {
-        $this->newLine();
-        $this->text('<info>'.$signal.'</info> query process ('.number_format($query_exec_time, 4).'s)');
-        $this->newLine();
-        $this->text('<comment>'.str_repeat('-', 30).'</comment>');
-        $this->newLine();
-        $execution_time = ($time_end - $time_start);
-        $this->text('<info>++</info> finished in '. number_format($execution_time, 4).'s');
-        $this->text('<info>++</info> '.$exec_queries.' sql queries');
     }
 }

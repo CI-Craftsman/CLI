@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Dotenv\Dotenv;
 
 /**
  * Command Class
@@ -56,6 +57,11 @@ abstract class Command extends SymfonyCommand
     protected $_style;
 
     /**
+     * @var \Dotenv\Dotenv
+     */
+    protected $_env;
+
+    /**
      * Configure default attributes
      */
     protected function configure()
@@ -63,7 +69,14 @@ abstract class Command extends SymfonyCommand
         $this
             ->setName($this->name)
             ->setDescription($this->description)
-            ->setAliases($this->aliases);
+            ->setAliases($this->aliases)
+            ->addOption(
+              'env',
+              null,
+              InputOption::VALUE_REQUIRED,
+              'Set the environment variable file',
+              sprintf('%s/%s', getcwd(), '.env')
+            );
     }
 
     /**
@@ -74,9 +87,27 @@ abstract class Command extends SymfonyCommand
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $this->_input  = $input;
-        $this->_output = $output;
-        $this->_style  = new SymfonyStyle($input, $output);
+        try
+        {
+          $this->_input  = $input;
+          $this->_output = $output;
+          $this->_style  = new SymfonyStyle($input, $output);
+
+          $file = new \SplFileInfo($this->getOption('env'));
+          // Create an environment instance
+          $this->_env = new Dotenv(
+            $file->getPathInfo()->getRealPath(),
+            $file->getFilename()
+          );
+          
+          $this->_env->load();
+          $this->_env->required(['CI_BASEPATH','CI_APPPATH'])->notEmpty();
+        }
+        catch (Exception $e)
+        {
+          throw new \RuntimeException($e->getMessage());
+        }
+
     }
 
     /**

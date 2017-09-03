@@ -12,14 +12,20 @@ namespace Craftsman\Core;
  */
 class Codeigniter
 {
+    public function __construct()
+    {
+        try
+        {
+            return require_once __DIR__.'/../../utils/codeigniter.php';
+        }
+        catch (Exception $e)
+        {
+            exit(preg_replace('/\s+/', ' ', $e->getMessage()));
+        }
+    }
 
-  public function __construct()
-  {
-    return require_once __DIR__.'/../../utils/codeigniter.php';
-  }
-
-  public function &get()
-  {
-    return \CI_Controller::get_instance();
-  }
+    public function &get()
+    {
+        return \CI_Controller::get_instance();
+    }
 }

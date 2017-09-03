@@ -13,44 +13,42 @@ use Craftsman\Core\Generator;
  */
 class Seeder extends Generator implements \Craftsman\Interfaces\Command
 {
-	protected $name 		= 'generate:seeder';
-	protected $description 	= 'Generate a Seeder';
-	protected $aliases 		= ['g:seeder'];
+    protected $name        = 'generate:seeder';
+    protected $description = 'Generate a Seeder';
+    protected $aliases     = ['g:seeder'];
 
-	public function start()
-	{
-    	$filename = ucfirst($this->getArgument('filename'));
-    	$basepath = rtrim($this->getOption('path'),'/');
-		$appdir   = basename($basepath);
-		
-		$basepath.= '/seeders';
+    public function start()
+    {
+        $filename = ucfirst($this->getArgument('filename'));
+        $appPath  = realpath(getenv('CI_APPPATH'));
+        $appDir   = basename($appPath);
 
-		$this->text("Seeder path: <comment>{$appdir}/seeders</comment>");
-		$this->text('Filename: <comment>'.$filename.'.php</comment>');
+        $this->text(sprintf('Seeder path: <comment>./%s/seeders</comment>', $appDir));
+        $this->text(sprintf('Filename: <comment>%s.php</comment>', $filename));
 
-    	// Confirm the action
-	  	if($this->confirm('Do you want to create a '.$filename.' Seeder?', TRUE))
-	  	{
-			// We could try to create a directory if doesn't exist.
-			(! $this->_filesystem->exists($basepath)) && $this->_filesystem->mkdir($basepath);
+        // Confirm the action
+        if ($this->confirm(sprintf('Do you want to create a %s Seeder?', $filename), true))
+        {
+            // We could try to create a directory if doesn't exist.
+            $this->createDirectory(sprintf('%s/seeders', $appPath));
 
-  			$test_file = "{$basepath}/{$filename}.php";
+            $testFile = sprintf('%s/seeders/%s.php', $appPath, $filename);
 
-  			$options = array(
-	  			'NAME' 		 => $filename,
-	  			'COLLECTION' => $filename,
-	  			'FILENAME'   => basename($test_file),
-	  			'PATH'       => "./{$appdir}/seeders"
-	  		);
+            $options = array(
+                'NAME'       => $filename,
+                'COLLECTION' => $filename,
+                'FILENAME'   => basename($testFile),
+                'PATH'       => sprintf('./%s/seeders', $appDir)
+            );
 
-	  		if ($this->make($test_file, 'seeders/base.php.twig', $options))
-	  		{
-	  			$this->success('Model created successfully!');
-	  		}
-	  	}
-	  	else
-	  	{
-	  		$this->warning('Process aborted!');
-	  	}
-	}
+            if ($this->make($testFile, 'seeders/base.php.twig', $options))
+            {
+                $this->success('Model created successfully!');
+            }
+        }
+        else
+        {
+            $this->warning('Process aborted!');
+        }
+    }
 }

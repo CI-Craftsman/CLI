@@ -14,126 +14,135 @@ use Symfony\Component\Console\Input\InputOption;
 */
 class Migration extends Generator implements \Craftsman\Interfaces\Command
 {
-	protected $name 		= 'generate:migration';
-	protected $description 	= 'Generate a Migration';
-	protected $aliases		= ['g:migration'];
+    protected $name        = 'generate:migration';
+    protected $description = 'Generate a Migration';
+    protected $aliases     = ['g:migration'];
 
-	public function configure()
-	{
-		parent::configure();
+    public function configure()
+    {
+        parent::configure();
 
-		$this
-			->addOption(
-				'sequential',
-				NULL,
-				InputOption::VALUE_NONE,
-				'If set, the migration will run with sequential mode active'
-			);
-	}
+        $this
+            ->addOption(
+                'sequential',
+                null,
+                InputOption::VALUE_NONE,
+                'If set, the migration will run with sequential mode active'
+            )
+						->addOption(
+							'timezone',
+							null,
+							InputOption::VALUE_REQUIRED,
+							'Set default timezone if we use a timestamp migration version.',
+							'UTC'
+						);
+    }
 
-	public function start()
-	{
-		// Set default timezone if we use a timestamp migration version.
-		date_default_timezone_set('UTC');
+    public function start()
+    {
+        // Set default timezone if we use a timestamp migration version.
+        date_default_timezone_set($this->getOption('timezone'));
 
-		$migration_regex = ($this->getOption('sequential') !== FALSE)
-			? '/^\d{3}_(\w+)$/'
-			: '/^\d{14}_(\w+)$/';
+        $filename   		= $this->getArgument('filename');
+				$appPath    		= realpath(getenv('CI_APPPATH'));
+        $appDir     		= basename($appPath);
+        $migrationsPath = sprintf('%s/migrations', $appPath);
+        $migrations 		= array();
 
-		$filename   = $this->getArgument('filename');
-		$basepath   = rtrim(preg_replace(['/migrations/','/migration/'], ['',''], $this->getOption('path')),'/');
-		$appdir 	= basename($basepath);
-		$migrations = array();
+				$migrationRegex = ($this->getOption('sequential') !== false)
+						? '/^\d{3}_(\w+)$/'
+						: '/^\d{14}_(\w+)$/';
 
-		if ($this->_filesystem->exists($basepath.'/migrations'))
-		{
-			// And now let's figure out the migration target version
-			if ($handle = opendir($basepath.'/migrations'))
-			{
-				while (($entry = readdir($handle)) !== FALSE)
+        if ($this->_filesystem->exists($migrationsPath))
 				{
-					if ($entry == "." && $entry == "..") { continue; }
-
-					if (preg_match($migration_regex, $file = basename($entry, '.php')))
-					{
-						$number = sscanf($file, '%[0-9]+', $number)? $number : '0';
-
-						if (isset($migrations[$number]))
+            // And now let's figure out the migration target version
+            if ($handle = opendir($migrationsPath))
 						{
-							throw new \RuntimeException("Cannot be duplicate migration numbers");
-						}
-						$migrations[$number] = $file;
-					}
-				}
-				closedir($handle);
-				ksort($migrations);
-			}
-		}
+                while (($entry = readdir($handle)) !== false)
+								{
+                    if ($entry == "." && $entry == "..") { continue; }
 
-		$versions = array_keys($migrations);
-		end($versions);
+                    if (preg_match($migrationRegex, $file = basename($entry, '.php')))
+										{
+                        $number = sscanf($file, '%[0-9]+', $number)? $number : '0';
 
-		$target_version = ($this->getOption('sequential') !== FALSE)
-			? sprintf('%03d', abs(end($versions)) + 1)
-			: date("YmdHis");
+                        if (isset($migrations[$number]))
+												{
+                            throw new \RuntimeException("Cannot be duplicate migration numbers");
+                        }
 
-		// Maybe something wrong with the target version?
-		if ($target_version <= current($versions))
-		{
-			$this->note("There's something wrong with the target version, we need to replace it with a new one.");
-			$target_version = abs(current($versions)) + 1;
-		}
+                        $migrations[$number] = $file;
+                    }
+                }
+                closedir($handle);
+                ksort($migrations);
+            }
+        }
 
-		$target_file = $target_version."_".$filename.".php";
+        $versions = array_keys($migrations);
+        end($versions);
 
-		$this->text("(In {getcwd()})");
-		$this->newLine();
-		$this->text('Migration path: <comment>'.basename($basepath).'/migrations/</comment>');
-		$this->text('Filename: <comment>'.$target_file.'</comment>');
+        $targetVersion = ($this->getOption('sequential') !== false)
+            ? sprintf('%03d', abs(end($versions)) + 1)
+            : date("YmdHis");
 
-		// Confirm the action
-		if($this->confirm('Do you want to create a '.$filename.' Migration?', TRUE))
-		{
-			// We could try to create a directory if doesn't exist.
-			(! $this->_filesystem->exists($basepath.'/migrations')) && $this->_filesystem->mkdir($basepath.'/migrations');
+        // Maybe something wrong with the target version?
+        if ($targetVersion <= current($versions))
+				{
+            $this->note("There's something wrong with the target version, we need to replace it with a new one.");
+            $targetVersion = abs(current($versions)) + 1;
+        }
 
-			$test_file = $basepath.'/migrations/'.$target_file;
-	    	// Set the migration template arguments
-	    	list($_type) = explode('_', $this->getArgument('filename'));
+        $targetFile = sprintf('%s_%s.php', $targetVersion, $filename);
 
-		    $options = array(
-			    'NAME' 		 => ucfirst($this->getArgument('filename')),
-			    'FILENAME' 	 => $target_file,
-			    'PATH' 		 => "./{$appdir}/migrations",
-			    'TABLE_NAME' => str_replace($_type.'_', '', $this->getArgument('filename')),
-			    'FIELDS' 	 => (array) $this->getArgument('options')
-		    );
+        $this->text(sprintf('(In: %s)', getcwd()));
+        $this->newLine();
+        $this->text(sprintf('Migration path: <comment>./%s/migrations/</comment>', $appDir));
+        $this->text(sprintf('Filename: <comment>%s</comment>', $targetFile));
 
-		    switch ($_type)
-		    {
-		   		case 'add':
-		   		case 'create':
-		   		case 'new':
-		       		$template = 'migrations/create.php.twig';
-		       		break;
-		   		case 'update':
-		   		case 'modify':
-		       		$template = 'migrations/modify.php.twig';
-		       		empty($options['FIELDS']) && $options['FIELDS'] = array('column_name:column_type');
-			       	break;
-		   		default:
-		       		$template = 'migrations/default.php.twig';
-		       		break;
-		    }
+        // Confirm the action
+        if ($this->confirm(sprintf('Do you want to create a %s Migration?', $filename), true))
+				{
+            // We could try to create a directory if doesn't exist.
+						$this->createDirectory(sprintf('%s/migrations', $appPath));
 
-			if ($this->make($test_file, $template, $options))
-			{
-				$this->success('Migration created successfully!');
-			}
-		}
-		else
-		{
-			$this->warning('Process aborted!');
-		}
-	}
+            $testFile = sprintf('%s/migrations/%s', $appPath, $targetFile);
+            // Set the migration template arguments
+            list($_type) = explode('_', $this->getArgument('filename'));
+
+            $options = array(
+                'NAME'       => ucfirst($this->getArgument('filename')),
+                'FILENAME'   => $targetFile,
+                'PATH'       => sprintf('./%s/migrations', $appDir),
+                'TABLE_NAME' => str_replace($_type.'_', '', $this->getArgument('filename')),
+                'FIELDS'     => (array) $this->getArgument('options')
+            );
+
+            switch ($_type)
+						{
+                case 'add':
+                case 'create':
+                case 'new':
+                    $template = 'migrations/create.php.twig';
+                    break;
+                case 'update':
+                case 'modify':
+                    $template = 'migrations/modify.php.twig';
+                    empty($options['FIELDS']) && $options['FIELDS'] = array('column_name:column_type');
+                    break;
+                default:
+                    $template = 'migrations/default.php.twig';
+                    break;
+            }
+
+            if ($this->make($testFile, $template, $options))
+						{
+                $this->success('Migration created successfully!');
+            }
+        }
+				else
+				{
+            $this->warning('Process aborted!');
+        }
+    }
 }

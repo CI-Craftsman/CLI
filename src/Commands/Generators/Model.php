@@ -13,45 +13,42 @@ use Craftsman\Core\Generator;
  */
 class Model extends Generator implements \Craftsman\Interfaces\Command
 {
-	protected $name        	= 'generate:model';
-	protected $description 	= 'Generate a Model';
-	protected $aliases 		= ['g:model'];
+    protected $name           = 'generate:model';
+    protected $description    = 'Generate a Model';
+    protected $aliases        = ['g:model'];
 
-	public function start()
-	{
-    	$filename = ucfirst($this->getArgument('filename'));
-    	$basepath = rtrim($this->getOption('path'),'/');
-		$appdir   = basename($basepath);
-		
-		$basepath.= '/models/';
+    public function start()
+    {
+        $filename = ucfirst($this->getArgument('filename'));
+				$appPath  = realpath(getenv('CI_APPPATH'));
+        $appDir   = basename($appPath);
 
-		$this->text("Controller path: <comment>{$appdir}/models</comment>");
-		$this->text('Filename: <comment>'.$filename.'_model.php</comment>');
+        $this->text(sprintf('Model path: <comment>./%s/models</comment>', $appDir));
+        $this->text(sprintf('Filename: <comment>%s_model.php</comment>', $filename));
 
         // Confirm the action
-	    if($this->confirm('Do you want to create a '.$filename.' Model?', TRUE))
-	    {
-			// We could try to create a directory if doesn't exist.
-			(! $this->_filesystem->exists($basepath)) && $this->_filesystem->mkdir($basepath);
+        if ($this->confirm(sprintf('Do you want to create a %s Model?', $filename), true))
+				{
+            // We could try to create a directory if doesn't exist.
+						$this->createDirectory(sprintf('%s/models', $appPath));
 
-	    	$test_file = $basepath.$filename.'_model.php';
+            $testFile = sprintf('%s/models/%s_model.php', $appPath, $filename);
 
-	    	$options = array(
-	    		'NAME' 		 => $filename.'_model',
-	    		'COLLECTION' => $filename,
-	    		'FILENAME'   => basename($test_file),
-	    		'PATH'       => "./{$appdir}/models"
-	    	);
+            $options = array(
+                'NAME'       => sprintf('%s_model', $filename),
+                'COLLECTION' => $filename,
+                'FILENAME'   => basename($testFile),
+                'PATH'       => sprintf('./%s/models', $appDir)
+            );
 
-	    	if ($this->make($test_file, 'models/base.php.twig', $options))
-	    	{
-	    		$this->success('Model created successfully!');
-	    	}
-	    }
-	    else
-	    {
-	    	$this->warning('Process aborted!');
-	    }
-	}
-
+            if ($this->make($testFile, 'models/base.php.twig', $options))
+						{
+                $this->success('Model created successfully!');
+            }
+        }
+				else
+				{
+            $this->warning('Process aborted!');
+        }
+    }
 }

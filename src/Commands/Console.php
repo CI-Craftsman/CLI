@@ -6,8 +6,6 @@ use Craftsman\Core\Codeigniter;
 use Psy\Configuration;
 use Psy\Shell;
 
-use Symfony\Component\Console\Input\InputOption;
-
 /**
  * Console Command
  *
@@ -18,33 +16,24 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class Console extends Command
 {
-  protected $name        = 'console';
-  protected $description = 'Interact with your application';
-  protected $aliases     = ['c'];
+    protected $name        = 'console';
+    protected $description = 'Interact with your application';
+    protected $aliases     = ['c'];
 
-  protected $commandWhitelist = [
-    'generate:controller',
-    'generate:migration',
-    'generate:model',
-    'generate:seeder',
-    'migrate:check',
-    'migrate:latest',
-    'migrate:refresh',
-    'migrate:reset',
-    'migrate:rollback',
-    'migrate:version',
-    'db:seed',
-    'serve'
-  ];
-
-  /**
-   * Command configuration method.
-   * Configure all the arguments and options.
-   */
-  protected function configure()
-  {
-    parent::configure();
-  }
+    protected $commandWhitelist = [
+        'generate:controller',
+        'generate:migration',
+        'generate:model',
+        'generate:seeder',
+        'migrate:check',
+        'migrate:latest',
+        'migrate:refresh',
+        'migrate:reset',
+        'migrate:rollback',
+        'migrate:version',
+        'db:seed',
+        'serve'
+    ];
 
   /**
    * Execute the console command.
@@ -54,43 +43,44 @@ class Console extends Command
    */
   public function start()
   {
-    $this->getApplication()->setCatchExceptions(false);
-    try
-    {
-      $instance = new Codeigniter();
-      $config   = new Configuration; // TODO: Create a method that configures the Psy\Shell
-      $shell    = new Shell($config);
+      $this->getApplication()->setCatchExceptions(false);
 
-      $CI =& $instance->get();
+      try
+      {
+          // Create a Codeigniter instance
+          $CI =& (new Codeigniter)->get();
 
-      $this->writeln([
-        'Craftsman '.$this->getApplication()->getVersion().' Console',
-        '---------------------------------------------------------------',
-        'Codeigniter : $CI',
-        'Path: ./'.basename(FCPATH).'/'.basename(APPPATH),
-        '---------------------------------------------------------------'
-      ]);
+          $config = new Configuration; // TODO: Create a method that configures the Psy\Shell
+          $shell  = new Shell($config);
 
-      $shell->setScopeVariables(['CI' => $CI]);
-      $shell->addCommands($this->getCommands());
-      $shell->run();
-    }
-    catch (Exception $e)
-    {
-      echo $e->getMessage() . PHP_EOL;
-      // TODO: this triggers the "exited unexpectedly" logic in the
-      // ForkingLoop, so we can't exit(1) after starting the shell...
-      // exit(1);
-    }
+          $this->writeln([
+            sprintf('Craftsman %s - Console',$this->getApplication()->getVersion()),
+            '---------------------------------------------------------------',
+            'Codeigniter : $CI',
+            sprintf('App Path: ./%s/', basename(APPPATH)),
+            '---------------------------------------------------------------'
+          ]);
+
+          $shell->setScopeVariables(['CI' => $CI]);
+          $shell->addCommands($this->getCommands());
+          $shell->run();
+      }
+      catch (Exception $e)
+      {
+          echo $e->getMessage() . PHP_EOL;
+          // TODO: this triggers the "exited unexpectedly" logic in the
+          // ForkingLoop, so we can't exit(1) after starting the shell...
+          // exit(1);
+      }
   }
 
-  private function getCommands()
-  {
-    $commands = [];
-    foreach ($this->getApplication()->all() as $name => $command)
+    private function getCommands()
     {
-      in_array($name, $this->commandWhitelist) && $commands[] = $command;
+        $commands = [];
+        foreach ($this->getApplication()->all() as $name => $command)
+        {
+            in_array($name, $this->commandWhitelist) && $commands[] = $command;
+        }
+        return $commands;
     }
-    return $commands;
-  }
 }

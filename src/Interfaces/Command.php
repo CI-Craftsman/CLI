@@ -3,7 +3,7 @@ namespace Craftsman\Interfaces;
 
 interface Command
 {
-	public function start();	
+    public function start();
 }
 
 /* End of file Command.php */

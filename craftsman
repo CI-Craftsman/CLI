@@ -1,9 +1,11 @@
 #!/usr/bin/env php
 <?php
-use Dotenv\Dotenv;
 use Symfony\Component\Console\Application;
 
 require_once(__DIR__.'/utils/bootstrap.php');
+
+define('CRAFTSMANPATH', __DIR__.'/');
+define('CRAFTSMANVERSION', '5.0.0');
 
 /**
  * CLI Codeigniter Crafstman
@@ -13,49 +15,32 @@ require_once(__DIR__.'/utils/bootstrap.php');
  * @link       https://github.com/davidsosavaldes/Craftsman
  * @copyright  Copyright (c) 2016, David Sosa Valdes.
  */
-try 
-{
-	$dotenv = new Dotenv(getcwd(), '.env');
-	$dotenv->load();
-	$dotenv->required(['CI_BASEPATH','CI_APPPATH'])->notEmpty();
-
-	define('CRAFTSMANPATH', __DIR__.'/');
-
-} 
-catch (Exception $e) 
-{
-	exit(preg_replace('/\s+/', ' ', $e->getMessage()));
-}
-
-$generators = [
-	new Craftsman\Commands\Generators\Controller,
-	new Craftsman\Commands\Generators\Model,
-	new Craftsman\Commands\Generators\Migration,
-	new Craftsman\Commands\Generators\Seeder
+$commands = [
+  // Generators
+  new Craftsman\Commands\Generators\Controller,
+  new Craftsman\Commands\Generators\Model,
+  new Craftsman\Commands\Generators\Migration,
+  new Craftsman\Commands\Generators\Seeder,
+  // Migrations
+  new Craftsman\Commands\Migrations\Info,
+  new Craftsman\Commands\Migrations\Version,
+  new Craftsman\Commands\Migrations\Latest,
+  new Craftsman\Commands\Migrations\Rollback,
+  new Craftsman\Commands\Migrations\Reset,
+  new Craftsman\Commands\Migrations\Refresh,
+  // General
+  new Craftsman\Commands\Serve,
+  new Craftsman\Commands\Console,
+  new Craftsman\Commands\Notes,
+  new Craftsman\Commands\Seeder,
 ];
 
-$migrations = [
-	new Craftsman\Commands\Migrations\Info,
-	new Craftsman\Commands\Migrations\Version,
-	new Craftsman\Commands\Migrations\Latest,
-	new Craftsman\Commands\Migrations\Rollback,
-	new Craftsman\Commands\Migrations\Reset,
-	new Craftsman\Commands\Migrations\Refresh
-];
+$application = new Application('Craftsman', CRAFTSMANVERSION);
 
-$general = [
-	new Craftsman\Commands\Serve,
-	new Craftsman\Commands\Console,
-	new Craftsman\Commands\Notes,
-	new Craftsman\Commands\Seeder
-];
-
-// Set the commands
-$commands = array_merge($generators, $migrations, $general);
-
-$application = new Application('Craftsman', '4.2.3');
 // Add the default commands
-foreach ($commands as $key => $command) {
-	$application->add($command);
+foreach ($commands as $key => $command)
+{
+    $application->add($command);
 }
+
 $application->run();

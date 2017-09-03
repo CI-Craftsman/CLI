@@ -3,7 +3,7 @@ namespace Craftsman\Interfaces;
 
 interface Seeder
 {
-	public function run();	
+    public function run();
 }
 
 /* End of file Command.php */

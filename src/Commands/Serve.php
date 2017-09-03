@@ -60,7 +60,7 @@ class Serve extends Command
    * @throws \Exception
    */
   public function start()
-  { 
+  {
     $host    = $this->getOption('host');
     $port    = intval($this->getOption('port'));
     $docpath = $this->getOption('docroot')? $this->getOption('docroot') : '.';
@@ -74,29 +74,38 @@ class Serve extends Command
     $this->writeln("Document root is ". realpath($docpath));
     $this->writeln("Press Ctrl-C to quit.");
 
-    try 
+    try
     {
-      $process = new Process("{$binary} -S {$host}:{$port} {$base}/utils/server.php -t {$docroot}"); 
+      $process = new Process(sprintf(
+          '%s -S %s:%s %s/utils/server.php -t %s',
+          $binary,
+          $host,
+          $port,
+          $base,
+          $docroot
+      ));
 
       $process
         ->setWorkingDirectory($docpath)
         ->setTimeout(0)
         ->setPTY(true)
-        ->mustRun(function($type, $buffer) {      
-          foreach (explode("\n", rtrim($buffer, "\n")) as $output) 
+        ->mustRun(function($type, $buffer) {
+          foreach (explode("\n", rtrim($buffer, "\n")) as $output)
           {
             $req = substr(strrchr($output, ' '), 1);
-            if ($response = (strpos($output, '[200]') !== FALSE)) 
+            if ($response = (strpos($output, '[200]') !== FALSE))
             {
-              $output = str_replace($req, "<info>{$req}</info>", $output);
+              $output = str_replace($req, sprintf("<info>%s</info>", $req), $output);
             }
-            $this->writeln($output); 
+            $this->writeln($output);
           }
-        });      
-    } 
-    catch (ProcessFailedException $e) 
+        });
+    }
+    catch (ProcessFailedException $e)
     {
-      throw new Exception("Error Processing Request: {$e->getMessage()}");
+      throw new Exception(sprintf(
+        'Error Processing Request: %s', $e->getMessage()
+      ));
     }
   }
 }
