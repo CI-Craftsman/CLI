@@ -16,6 +16,7 @@ class NoteCommandTest extends \PHPUnit_Framework_TestCase
 
         $tester->execute(array(
             'command' => $command->getName(),
+            '--env' => sprintf('%s/.env.example', getcwd())
         ));
 
         $output = trim(preg_replace('/\s\s+/', ' ', $tester->getDisplay()));

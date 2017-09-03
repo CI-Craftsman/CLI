@@ -75,7 +75,7 @@ abstract class Command extends SymfonyCommand
               null,
               InputOption::VALUE_REQUIRED,
               'Set the environment variable file',
-              sprintf('%s/%s', getcwd(), '.env')
+              sprintf('%s/%s', getcwd(), '.craftsman')
             );
     }
 
@@ -99,7 +99,7 @@ abstract class Command extends SymfonyCommand
             $file->getPathInfo()->getRealPath(),
             $file->getFilename()
           );
-          
+
           $this->_env->load();
           $this->_env->required(['CI_BASEPATH','CI_APPPATH'])->notEmpty();
         }

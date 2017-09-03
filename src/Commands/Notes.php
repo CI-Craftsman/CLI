@@ -27,18 +27,16 @@ class Notes extends Command
      */
     public function start()
     {
-        $finder   = new Finder;
-        $basepath = basename(APPPATH);
-        $found    = [];
+        $finder  = new Finder;
+        $appPath = realpath(getenv('CI_APPPATH'));
+        $appDir  = basename($appPath);
+        $found   = [];
 
         $CI =& (new Codeigniter)->get();
 
-        $finder->ignoreUnreadableDirs()->files()->name('*.php')->in(APPPATH);
+        $finder->ignoreUnreadableDirs()->files()->name('*.php')->in($appPath);
 
-        $this->writeln([
-          sprintf('In: ./%s/',basename(APPPATH)),
-          '---------------------------------------------------------------'
-        ]);
+        $this->writeln([sprintf('In: ./%s/',$appDir), str_repeat('-', 60)]);
 
         foreach ($finder as $file) {
             $_file = new \SplFileObject($file->getRealPath());
@@ -57,7 +55,7 @@ class Notes extends Command
             $this->newLine();
         } else {
             foreach ($found as $file => $lines) {
-                $this->text("{$basepath}/$file:");
+                $this->text(sprintf('./%s/%s:', $appDir, $file));
                 $this->newLine();
                 $this->listing($lines);
             }
