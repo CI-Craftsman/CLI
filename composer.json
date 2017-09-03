@@ -20,7 +20,7 @@
     "symfony/filesystem": "^3.0",
     "symfony/process": "^3.0",
     "symfony/finder": "^3.2",
-    "twig/twig" : "^2.4",
+    "twig/twig" : "^2.4|~1.0",
     "vlucas/phpdotenv": "^2.4",
     "psy/psysh": "@stable"
   },
