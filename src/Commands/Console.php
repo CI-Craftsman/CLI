@@ -48,7 +48,7 @@ class Console extends Command
       try
       {
           // Create a Codeigniter instance
-          $CI =& (new Codeigniter)->get();
+          $CI = new Codeigniter; $CI =& $CI->get();
 
           $config = new Configuration; // TODO: Create a method that configures the Psy\Shell
           $shell  = new Shell($config);

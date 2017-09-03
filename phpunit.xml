@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit bootstrap="./utils/bootstrap.php" colors="true">
 	<php>
-        <env name="CI_BASEPATH" value="./tests/CodeIgniter-3.1.4/system/"/>
-        <env name="CI_APPPATH" value="./tests/CodeIgniter-3.1.4/application/"/>
-        <env name="CI_FCPATH" value="./tests/CodeIgniter-3.4.1/"/>
-    </php>
-    <testsuites>
-        <testsuite name="unit">
-            <directory suffix=".php">./tests/unit/</directory>
-        </testsuite>
-    </testsuites>
+		<env name="CI_TEST_VERSION" value="3.1.4"/>
+	</php>
+	<testsuites>
+		<testsuite name="unit">
+			<directory suffix=".php">./tests/unit/</directory>
+		</testsuite>
+	</testsuites>
 	<filter>
-	  <whitelist processUncoveredFilesFromWhitelist="true">
-	    <directory suffix=".php">./src/</directory>
-	  </whitelist>
-	</filter>    
+		<whitelist processUncoveredFilesFromWhitelist="true">
+			<directory suffix=".php">./src/</directory>
+		</whitelist>
+	</filter>
 </phpunit>

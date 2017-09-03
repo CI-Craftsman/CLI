@@ -32,8 +32,6 @@ class Notes extends Command
         $appDir  = basename($appPath);
         $found   = [];
 
-        $CI =& (new Codeigniter)->get();
-
         $finder->ignoreUnreadableDirs()->files()->name('*.php')->in($appPath);
 
         $this->writeln([sprintf('In: ./%s/',$appDir), str_repeat('-', 60)]);

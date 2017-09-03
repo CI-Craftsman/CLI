@@ -71,7 +71,7 @@ abstract class Migration extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // Create a Codeigniter instance
-        $this->CI =& (new Codeigniter)->get();
+        $CI = new Codeigniter; $this->CI =& $CI->get();
         // Add the Craftsman extended packages
         $this->CI->load->add_package_path(CRAFTSMANPATH.'utils/extend/');
         // Load the special migration settings
