@@ -98,7 +98,7 @@ abstract class Command extends SymfonyCommand
             );
 
             $this->env->load();
-            $this->env->required(['CI_BASEPATH','CI_APPPATH'])->notEmpty();
+            $this->env->required(['BASEPATH','APPPATH'])->notEmpty();
         }
         catch (Exception $e)
         {

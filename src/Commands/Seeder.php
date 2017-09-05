@@ -60,7 +60,7 @@ class Seeder extends Command
         try
         {
           $filename = ucfirst($this->getArgument('name'));
-          $appPath  = realpath(getenv('CI_APPPATH'));
+          $appPath  = realpath(getenv('APPPATH'));
           $appDir   = basename($appPath);
 
           if (file_exists($file = sprintf('%s/seeders/%s.php', $appPath, $filename)))

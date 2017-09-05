@@ -20,7 +20,7 @@ class Controller extends Generator implements \Craftsman\Interfaces\Command
     public function start()
     {
         $filename        = ucfirst($this->getArgument('filename'));
-        $appPath         = realpath(getenv('CI_APPPATH'));
+        $appPath         = realpath(getenv('APPPATH'));
         $appDir          = basename($appPath);
         $controllersPath = sprintf('%s/controllers', $appPath);
         $viewsPath       = sprintf('%s/views', $appPath);

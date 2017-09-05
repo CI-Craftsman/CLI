@@ -65,7 +65,7 @@ abstract class Migration extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $appPath = realpath(getenv('CI_APPPATH'));
+        $appPath = realpath(getenv('APPPATH'));
         // Create a Codeigniter instance
         $CI = new Codeigniter; $CI =& $CI->get();
         // Add the Craftsman extended packages

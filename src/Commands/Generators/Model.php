@@ -20,7 +20,7 @@ class Model extends Generator implements \Craftsman\Interfaces\Command
     public function start()
     {
         $filename = ucfirst($this->getArgument('filename'));
-				$appPath  = realpath(getenv('CI_APPPATH'));
+				$appPath  = realpath(getenv('APPPATH'));
         $appDir   = basename($appPath);
 
         $this->text(sprintf('Model path: <comment>./%s/models</comment>', $appDir));

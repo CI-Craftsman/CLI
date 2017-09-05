@@ -44,7 +44,7 @@ class Migration extends Generator implements \Craftsman\Interfaces\Command
         date_default_timezone_set($this->getOption('timezone'));
 
         $filename   		= $this->getArgument('filename');
-				$appPath    		= realpath(getenv('CI_APPPATH'));
+				$appPath    		= realpath(getenv('APPPATH'));
         $appDir     		= basename($appPath);
         $migrationsPath = sprintf('%s/migrations', $appPath);
         $migrations 		= array();

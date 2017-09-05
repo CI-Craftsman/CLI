@@ -28,7 +28,7 @@ class Notes extends Command
     public function start()
     {
         $finder  = new Finder;
-        $appPath = realpath(getenv('CI_APPPATH'));
+        $appPath = realpath(getenv('APPPATH'));
         $appDir  = basename($appPath);
         $found   = [];
 

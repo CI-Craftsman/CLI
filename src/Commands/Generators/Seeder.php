@@ -20,7 +20,7 @@ class Seeder extends Generator implements \Craftsman\Interfaces\Command
     public function start()
     {
         $filename = ucfirst($this->getArgument('filename'));
-        $appPath  = realpath(getenv('CI_APPPATH'));
+        $appPath  = realpath(getenv('APPPATH'));
         $appDir   = basename($appPath);
 
         $this->text(sprintf('Seeder path: <comment>./%s/seeders</comment>', $appDir));

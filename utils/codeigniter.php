@@ -12,8 +12,8 @@
 
 define('ENVIRONMENT', getenv('CI_ENV') ? getenv('CI_ENV') : 'development');
 
-$system_path        = getenv('CI_BASEPATH');
-$application_folder = getenv('CI_APPPATH');
+$system_path        = getenv('BASEPATH');
+$application_folder = getenv('APPPATH');
 $public_folder      = getenv('CI_FCPATH');
 
 if ($_temp = realpath($system_path))
