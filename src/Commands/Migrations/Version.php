@@ -14,9 +14,9 @@ use Symfony\Component\Console\Input\InputArgument;
  */
 class Version extends Migration implements \Craftsman\Interfaces\Command
 {
-	protected $name        	= 'migrate:version';
-	protected $description 	= 'Run a specific migration';
-	protected $aliases 		= ['m:version'];
+	protected $name        = 'migrate:version';
+	protected $description = 'Run a specific migration';
+	protected $aliases 		 = ['m:version'];
 
 	protected function configure()
 	{
@@ -40,21 +40,22 @@ class Version extends Migration implements \Craftsman\Interfaces\Command
 		}
 		elseif ($version > $db_version)
 		{
-			$this->text('Migrating database <info>UP</info> to version '
-				.'<comment>'.$version.'</comment> from <comment>'.$db_version.'</comment>');
-			$case = 'migrating';
+			$this->text($this->getMigrationMessage('UP', $version, $db_version));
+
+			$case   = 'migrating';
 			$signal = '++';
 		}
 		else
 		{
-			$this->text('Migrating database <info>DOWN</info> to version '
-				.'<comment>'.$version.'</comment> from <comment>'.$db_version.'</comment>');
-			$case = 'reverting';
+			$this->text($this->getMigrationMessage('DOWN', $version, $db_version));
+
+			$case   = 'reverting';
 			$signal = '--';
 		}
 
 		$this->newLine();
-		$this->text('<info>'.$signal.'</info> '.$case);
+
+		$this->text($this->getSignalMessage($signal, $case));
 
 		$time_start = microtime(true);
 

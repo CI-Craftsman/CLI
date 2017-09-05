@@ -22,7 +22,7 @@ abstract class Migration extends Command
 
     /**
      * Codeigniter migration class.
-     * @var object
+     * @var \CI_Migration
      */
     protected $migration;
 
@@ -33,64 +33,60 @@ abstract class Migration extends Command
     protected $harmless = false;
 
     /**
-     * @var \CI_Controller
-     */
-    protected $CI;
-
-    /**
-     * Command configuration method.
      * Configure all the arguments and options.
+     * @return void
      */
     protected function configure()
     {
         parent::configure();
 
         $this
-          ->addOption(
-            'name',
-            null,
-            InputOption::VALUE_REQUIRED,
-            'Set the migration version name',
-            false
-          )
-          ->addOption(
-            'sequential',
-            null,
-            InputOption::VALUE_NONE,
-            'If set, the migration will run with sequential mode active'
-          );
+        ->addOption(
+          'name',
+          null,
+          InputOption::VALUE_REQUIRED,
+          'Set the migration version name',
+          false
+        )
+        ->addOption(
+          'sequential',
+          null,
+          InputOption::VALUE_NONE,
+          'If set, the migration will run with sequential mode active'
+        );
     }
 
     /**
      * Execute the Migration command
      *
-     * @param  InputInterface  $input  [description]
-     * @param  OutputInterface $output [description]
-     * @return [type]                  [description]
+     * @param  InputInterface  $input
+     * @param  OutputInterface $output
+     * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $appPath = realpath(getenv('CI_APPPATH'));
         // Create a Codeigniter instance
-        $CI = new Codeigniter; $this->CI =& $CI->get();
+        $CI = new Codeigniter; $CI =& $CI->get();
         // Add the Craftsman extended packages
-        $this->CI->load->add_package_path(CRAFTSMANPATH.'utils/extend/');
+        $CI->load->add_package_path(CRAFTSMANPATH.'utils/extend/');
         // Load the special migration settings
-        $this->CI->config->load('migration', true, true);
-
-        $appRoot = realpath(getenv('CI_APPPATH'));
+        $CI->config->load('migration', true, true);
 
         $this->text(sprintf('(in ./%s)', basename(getcwd())));
 
-        if ($params = $this->CI->config->item('migration'))
+        if ($params = $CI->config->item('migration'))
         {
             $this->newLine();
 
-            ($this->getOption('sequential') !== false)
-                && $params['migration_type'] = 'sequential';
+            if ($this->getOption('sequential') !== false)
+            {
+                $params['migration_type'] = 'sequential';
+            }
 
-            $this->CI->load->library('migration', $params);
+            $CI->load->library('migration', $params);
 
-            $this->migration = $this->CI->migration;
+            $this->migration =& $CI->migration;
             $this->migration->db->queries = [];
 
             $this->text(
@@ -103,8 +99,10 @@ abstract class Migration extends Command
 
             if (! $this->harmless)
             {
-                $this->note('You are about to execute a database migration that could'
-                      .' result in schema changes and data lost');
+                $this->note(
+                    'You are about to execute a database migration'
+                    .'that could result in schema changes and data lost.'
+                );
 
                 if (! $this->confirm('Do you wish to continue?'))
                 {
@@ -115,24 +113,16 @@ abstract class Migration extends Command
         }
         else
         {
-            throw new \RuntimeException('Craftsman migration settings does not appear to set correctly.');
+            throw new \RuntimeException(
+              'Craftsman migration settings does not'
+              .' appear to set correctly.'
+            );
         }
 
-        $this->setModelArguments();
-
-        parent::execute($input, $output);
-    }
-
-    /**
-     * Set Codeigniter Craftsman Migration Library arguments
-     */
-    protected function setModelArguments()
-    {
-        $appPath = realpath(getenv('CI_APPPATH'));
-
-        $params = array(
-            'module_path' => sprintf('%s/migrations/', $appPath)
-        );
+        // Set Codeigniter Craftsman Migration Library arguments
+        $params = [
+            'module_path' => sprintf('%s/migrations/', $appPath),
+        ];
 
         if ($this->getOption('name') !== FALSE)
         {
@@ -140,11 +130,45 @@ abstract class Migration extends Command
         }
         else
         {
-            if (($module_name = strtolower(basename($appPath))) !== 'application')
+            $moduleName = strtolower(basename($appPath));
+
+            if ($moduleName !== 'application')
             {
-                $params['module_name'] = $module_name;
+                $params['module_name'] = $moduleName;
             }
         }
-        return $this->migration->set_params($params);
+
+        $this->migration->set_params($params);
+
+        parent::execute($input, $output);
+    }
+
+    /**
+     * Get the signal message
+     *
+     * @param int $signal Migration signal (++, --)
+     * @param int $case   Migration case
+     * @return string
+     */
+    public function getSignalMessage($signal, $case)
+    {
+        return sprintf('<info>%s</info> %s', $signal, $case);
+    }
+
+    /**
+     * Get the migration message
+     *
+     * @param  string $status     Migration status (UP/DOWN)
+     * @param  int    $version    Migration version in the APP Filesystem
+     * @param  int    $db_version Migration version stored in the database
+     * @return string
+     */
+    public function getMigrationMessage($status, $version, $db_version)
+    {
+        return sprintf(
+            'Migrating database <info>%s</info> to version %s'
+            .'<comment>%s</comment> from <comment>%s</comment>',
+            $status, $version, $db_version
+        );
     }
 }

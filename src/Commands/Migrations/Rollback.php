@@ -13,9 +13,9 @@ use Craftsman\Core\Migration;
  */
 class Rollback extends Migration implements \Craftsman\Interfaces\Command
 {
-	protected $name        	= 'migrate:rollback';
-	protected $description 	= 'Rollback from the last migration';
-	protected $aliases 		= ['m:rollback'];
+	protected $name        = 'migrate:rollback';
+	protected $description = 'Rollback from the last migration';
+	protected $aliases 		 = ['m:rollback'];
 
 	public function start()
 	{
@@ -38,14 +38,15 @@ class Rollback extends Migration implements \Craftsman\Interfaces\Command
 		{
 			$version === FALSE && $version = 0;
 
-			$this->text('Migrating database <info>DOWN</info> to version '
-				.'<comment>'.$version.'</comment> from <comment>'.$db_version.'</comment>');
-			$case = 'reverting';
+			$this->text($this->getMigrationMessage('DOWN', $version, $db_version));
+
+			$case   = 'reverting';
 			$signal = '--';
 		}
 
 		$this->newLine();
-		$this->text('<info>'.$signal.'</info> '.$case);
+
+		$this->text($this->getSignalMessage($signal, $case));
 
 		$time_start = microtime(true);
 

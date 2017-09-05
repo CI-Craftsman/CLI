@@ -15,7 +15,7 @@ class Latest extends Migration implements \Craftsman\Interfaces\Command
 {
     protected $name        = 'migrate:latest';
     protected $description = 'Run the latest migration';
-    protected $aliases         = ['m:latest'];
+    protected $aliases     = ['m:latest'];
 
     public function start()
     {
@@ -23,26 +23,27 @@ class Latest extends Migration implements \Craftsman\Interfaces\Command
         $version    = $this->migration->get_latest_version($migrations);
         $db_version = intval($this->migration->get_db_version());
 
-        if ($version == $db_version) {
+        if ($version == $db_version)
+        {
             return $this->note('Database is up-to-date');
-        } elseif ($version > $db_version) {
-            $this->text(
-                'Migrating database <info>UP</info> to version '
-                .'<comment>'.$version.'</comment> from <comment>'.$db_version.'</comment>'
-            );
-            $case = 'migrating';
+        }
+        elseif ($version > $db_version)
+        {
+            $this->text($this->getMigrationMessage('UP', $version, $db_version));
+
+            $case   = 'migrating';
             $signal = '++';
-        } else {
-            $this->text(
-                'Migrating database <info>DOWN</info> to version '
-                .'<comment>'.$version.'</comment> from <comment>'.$db_version.'</comment>'
-            );
-            $case = 'reverting';
+        }
+        else
+        {
+            $this->text($this->getMigrationMessage('DOWN', $version, $db_version));
+
+            $case   = 'reverting';
             $signal = '--';
         }
 
         $this->newLine();
-        $this->text('<info>'.$signal.'</info> '.$case);
+        $this->text($this->getSignalMessage($signal, $case));
 
         $time_start = microtime(true);
 
