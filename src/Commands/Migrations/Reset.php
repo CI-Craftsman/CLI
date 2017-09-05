@@ -13,33 +13,33 @@ use Craftsman\Core\Migration;
  */
 class Reset extends Migration implements \Craftsman\Interfaces\Command
 {
-	protected $name        = 'migrate:reset';
-	protected $description = 'Rollback all migrations';
-	protected $aliases 		 = ['m:reset'];
+    protected $name        = 'migrate:reset';
+    protected $description = 'Rollback all migrations';
+    protected $aliases     = ['m:reset'];
 
-	public function start()
-	{
-		$migrations = $this->migration->find_migrations();
-		$db_version = intval($this->migration->get_db_version());
-		$version    = 0;
+    public function start()
+    {
+        $migrations = $this->migration->find_migrations();
+        $db_version = intval($this->migration->get_db_version());
+        $version    = 0;
 
-		$this->text($this->getMigrationMessage('DOWN', $version, $db_version));
+        $this->text($this->getMigrationMessage('DOWN', $version, $db_version));
 
-		$case   = 'reverting';
-		$signal = '--';
+        $case   = 'reverting';
+        $signal = '--';
 
-		$this->newLine();
+        $this->newLine();
 
-		$this->text($this->getSignalMessage($signal, $case));
+        $this->text($this->getSignalMessage($signal, $case));
 
-		$time_start = microtime(true);
+        $time_start = microtime(true);
 
-		$this->migration->version($version);
+        $this->migration->version($version);
 
-		$time_end = microtime(true);
+        $time_end = microtime(true);
 
-		list($query_exec_time, $exec_queries) = $this->measureQueries($this->migration->db->queries);
+        list($query_exec_time, $exec_queries) = $this->measureQueries($this->migration->db->queries);
 
-		$this->summary($signal, $time_start, $time_end, $query_exec_time, $exec_queries);
-	}
+        $this->summary($signal, $time_start, $time_end, $query_exec_time, $exec_queries);
+    }
 }

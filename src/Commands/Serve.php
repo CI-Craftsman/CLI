@@ -87,15 +87,17 @@ class Serve extends Command
       ->setTimeout(0)
       ->setPTY(true)
       ->mustRun(function($type, $buffer) {
-        foreach (explode("\n", rtrim($buffer, "\n")) as $output)
-        {
-          $req = substr(strrchr($output, ' '), 1);
-          if ($response = (strpos($output, '[200]') !== FALSE))
+          foreach (explode("\n", rtrim($buffer, "\n")) as $output)
           {
-            $output = str_replace($req, sprintf("<info>%s</info>", $req), $output);
+              $req = substr(strrchr($output, ' '), 1);
+
+              if ($response = (strpos($output, '[200]') !== FALSE))
+              {
+                  $output = str_replace($req, sprintf("<info>%s</info>", $req), $output);
+              }
+
+              $this->writeln($output);
           }
-          $this->writeln($output);
-        }
       });
     }
     catch (ProcessFailedException $e)

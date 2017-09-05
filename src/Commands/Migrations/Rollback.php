@@ -13,49 +13,52 @@ use Craftsman\Core\Migration;
  */
 class Rollback extends Migration implements \Craftsman\Interfaces\Command
 {
-	protected $name        = 'migrate:rollback';
-	protected $description = 'Rollback from the last migration';
-	protected $aliases 		 = ['m:rollback'];
+    protected $name        = 'migrate:rollback';
+    protected $description = 'Rollback from the last migration';
+    protected $aliases     = ['m:rollback'];
 
-	public function start()
-	{
-		$migrations = $this->migration->find_migrations();
-		$versions   = array_map('intval', array_keys($migrations));
-		$db_version = intval($this->migration->get_db_version());
+    public function start()
+    {
+        $migrations = $this->migration->find_migrations();
+        $versions   = array_map('intval', array_keys($migrations));
+        $db_version = intval($this->migration->get_db_version());
 
-		end($versions);
+        end($versions);
 
-		while ($version = prev($versions))
-		{
-			if ($version !== $db_version) { break; }
-		}
+        while ($version = prev($versions))
+				{
+            if ($version !== $db_version)
+						{
+                break;
+            }
+        }
 
-		if(($version + $db_version) <= 0)
-		{
-			return $this->note("Can't rollback anymore");
-		}
-		else
-		{
-			$version === FALSE && $version = 0;
+        if (($version + $db_version) <= 0)
+				{
+            return $this->note("Can't rollback anymore");
+        }
+				else
+				{
+            $version === false && $version = 0;
 
-			$this->text($this->getMigrationMessage('DOWN', $version, $db_version));
+            $this->text($this->getMigrationMessage('DOWN', $version, $db_version));
 
-			$case   = 'reverting';
-			$signal = '--';
-		}
+            $case   = 'reverting';
+            $signal = '--';
+        }
 
-		$this->newLine();
+        $this->newLine();
 
-		$this->text($this->getSignalMessage($signal, $case));
+        $this->text($this->getSignalMessage($signal, $case));
 
-		$time_start = microtime(true);
+        $time_start = microtime(true);
 
-		$this->migration->version($version);
+        $this->migration->version($version);
 
-		$time_end = microtime(true);
+        $time_end = microtime(true);
 
-		list($query_exec_time, $exec_queries) = $this->measureQueries($this->migration->db->queries);
+        list($query_exec_time, $exec_queries) = $this->measureQueries($this->migration->db->queries);
 
-		$this->summary($signal, $time_start, $time_end, $query_exec_time, $exec_queries);
-	}
+        $this->summary($signal, $time_start, $time_end, $query_exec_time, $exec_queries);
+    }
 }

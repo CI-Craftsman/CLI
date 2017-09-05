@@ -14,57 +14,58 @@ use Symfony\Component\Console\Input\InputArgument;
  */
 class Version extends Migration implements \Craftsman\Interfaces\Command
 {
-	protected $name        = 'migrate:version';
-	protected $description = 'Run a specific migration';
-	protected $aliases 		 = ['m:version'];
+    protected $name        = 'migrate:version';
+    protected $description = 'Run a specific migration';
+    protected $aliases     = ['m:version'];
 
-	protected function configure()
-	{
-		parent::configure();
-		$this
-			->addArgument(
-				'version',
-				InputArgument::REQUIRED,
-				'The version name'
-			);
-	}
+    protected function configure()
+    {
+        parent::configure();
 
-	public function start()
-	{
-		$version    = abs($this->getArgument('version'));
-		$db_version = intval($this->migration->get_db_version());
+        $this
+        ->addArgument(
+            'version',
+            InputArgument::REQUIRED,
+            'The version name'
+        );
+    }
 
-		if($version == $db_version)
-		{
-			return $this->note('Database is up-to-date');
-		}
-		elseif ($version > $db_version)
-		{
-			$this->text($this->getMigrationMessage('UP', $version, $db_version));
+    public function start()
+    {
+        $version    = abs($this->getArgument('version'));
+        $db_version = intval($this->migration->get_db_version());
 
-			$case   = 'migrating';
-			$signal = '++';
-		}
-		else
-		{
-			$this->text($this->getMigrationMessage('DOWN', $version, $db_version));
+        if ($version == $db_version)
+				{
+            return $this->note('Database is up-to-date');
+        }
+				elseif ($version > $db_version)
+				{
+            $this->text($this->getMigrationMessage('UP', $version, $db_version));
 
-			$case   = 'reverting';
-			$signal = '--';
-		}
+            $case   = 'migrating';
+            $signal = '++';
+        }
+				else
+				{
+            $this->text($this->getMigrationMessage('DOWN', $version, $db_version));
 
-		$this->newLine();
+            $case   = 'reverting';
+            $signal = '--';
+        }
 
-		$this->text($this->getSignalMessage($signal, $case));
+        $this->newLine();
 
-		$time_start = microtime(true);
+        $this->text($this->getSignalMessage($signal, $case));
 
-		$this->migration->version($version);
+        $time_start = microtime(true);
 
-		$time_end = microtime(true);
+        $this->migration->version($version);
 
-		list($query_exec_time, $exec_queries) = $this->measureQueries($this->migration->db->queries);
+        $time_end = microtime(true);
 
-		$this->summary($signal, $time_start, $time_end, $query_exec_time, $exec_queries);
-	}
+        list($query_exec_time, $exec_queries) = $this->measureQueries($this->migration->db->queries);
+
+        $this->summary($signal, $time_start, $time_end, $query_exec_time, $exec_queries);
+    }
 }

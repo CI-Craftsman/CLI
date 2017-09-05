@@ -23,19 +23,19 @@ class Migration extends Generator implements \Craftsman\Interfaces\Command
         parent::configure();
 
         $this
-            ->addOption(
-                'sequential',
-                null,
-                InputOption::VALUE_NONE,
-                'If set, the migration will run with sequential mode active'
-            )
-						->addOption(
-							'timezone',
-							null,
-							InputOption::VALUE_REQUIRED,
-							'Set default timezone if we use a timestamp migration version.',
-							'UTC'
-						);
+        ->addOption(
+            'sequential',
+            null,
+            InputOption::VALUE_NONE,
+            'If set, the migration will run with sequential mode active'
+        )
+				->addOption(
+					'timezone',
+					null,
+					InputOption::VALUE_REQUIRED,
+					'Set default timezone if we use a timestamp migration version.',
+					'UTC'
+				);
     }
 
     public function start()
