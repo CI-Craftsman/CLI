@@ -33,11 +33,11 @@ class Seeder extends Command
     	parent::configure();
 
       $this
-        ->addArgument(
-            'name',
-            InputArgument::REQUIRED,
-            'Seeder filename'
-        );
+      ->addArgument(
+          'name',
+          InputArgument::REQUIRED,
+          'Seeder filename'
+      );
     }
 
     /**
@@ -49,8 +49,8 @@ class Seeder extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $message = "WARNING! You are about to execute a database seed operation that could "
-          ."result data lost.\n Do you wish to continue?";
+        $message = "WARNING! You are about to execute a database seed operation "
+            ."that could result data lost.\n Do you wish to continue?";
 
         if (! $this->confirm($message))
         {

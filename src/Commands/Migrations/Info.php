@@ -16,8 +16,8 @@ class Info extends Migration implements \Craftsman\Interfaces\Command
 {
     protected $name        = 'migrate:info';
     protected $description = 'Display the current migration scheme';
-    protected $harmless    = true;
     protected $aliases     = ['m:info', 'db:info'];
+    protected $harmless    = true;
 
     public function start()
     {
@@ -38,13 +38,18 @@ class Info extends Migration implements \Craftsman\Interfaces\Command
             ]
         );
 
-        $this->text(sprintf("Local version: %s", $latest_version));
+        $this->text(sprintf('Local version: %s', $latest_version));
 
-        if ($latest_version < $db_version) {
+        if ($latest_version < $db_version)
+        {
             $this->caution('Could not find any migrations, check the migration path.');
-        } elseif ($latest_version > $db_version) {
+        }
+        elseif ($latest_version > $db_version)
+        {
             $this->note("The Database is not up-to-date, run 'migrate:latest'");
-        } else {
+        }
+        else
+        {
             $this->success('Database is up-to-date.');
         }
     }

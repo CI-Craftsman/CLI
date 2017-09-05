@@ -30,27 +30,27 @@ class Serve extends Command
     parent::configure();
 
     $this
-        ->addOption(
-            'host',
-            NULL,
-            InputOption::VALUE_OPTIONAL,
-            'The host address to serve the application on.',
-            'localhost'
-        )
-        ->addOption(
-            'port',
-            NULL,
-            InputOption::VALUE_OPTIONAL,
-            'The port to serve the application on.',
-            8000
-        )
-        ->addOption(
-            'docroot',
-            NULL,
-            InputOption::VALUE_OPTIONAL,
-            'Specify an explicit document root.',
-            FALSE
-        );
+    ->addOption(
+        'host',
+        NULL,
+        InputOption::VALUE_OPTIONAL,
+        'The host address to serve the application on.',
+        'localhost'
+    )
+    ->addOption(
+        'port',
+        NULL,
+        InputOption::VALUE_OPTIONAL,
+        'The port to serve the application on.',
+        8000
+    )
+    ->addOption(
+        'docroot',
+        NULL,
+        InputOption::VALUE_OPTIONAL,
+        'Specify an explicit document root.',
+        FALSE
+    );
   }
 
   /**
@@ -64,42 +64,39 @@ class Serve extends Command
     $host    = $this->getOption('host');
     $port    = intval($this->getOption('port'));
     $docpath = $this->getOption('docroot')? $this->getOption('docroot') : '.';
-
     $base    = ProcessUtils::escapeArgument(CRAFTSMANPATH);
     $binary  = ProcessUtils::escapeArgument((new PhpExecutableFinder)->find(false));
     $docroot = ProcessUtils::escapeArgument($docpath);
 
-    $this->writeln("Codeigniter development server started at " . date(DATE_RFC2822));
-    $this->writeln("Listening on http://{$host}:{$port}");
-    $this->writeln("Document root is ". realpath($docpath));
-    $this->writeln("Press Ctrl-C to quit.");
+    $this->writeln([
+      sprintf('Codeigniter development server started at %s', date(DATE_RFC2822)),
+      sprintf('Listening on http://%s:%s', $host, $port),
+      sprintf('Document root is %s', realpath($docpath)),
+      'Press Ctrl-C to quit.'
+    ]);
 
     try
     {
       $process = new Process(sprintf(
           '%s -S %s:%s %s/utils/server.php -t %s',
-          $binary,
-          $host,
-          $port,
-          $base,
-          $docroot
+          $binary, $host, $port, $base, $docroot
       ));
 
       $process
-        ->setWorkingDirectory($docpath)
-        ->setTimeout(0)
-        ->setPTY(true)
-        ->mustRun(function($type, $buffer) {
-          foreach (explode("\n", rtrim($buffer, "\n")) as $output)
+      ->setWorkingDirectory($docpath)
+      ->setTimeout(0)
+      ->setPTY(true)
+      ->mustRun(function($type, $buffer) {
+        foreach (explode("\n", rtrim($buffer, "\n")) as $output)
+        {
+          $req = substr(strrchr($output, ' '), 1);
+          if ($response = (strpos($output, '[200]') !== FALSE))
           {
-            $req = substr(strrchr($output, ' '), 1);
-            if ($response = (strpos($output, '[200]') !== FALSE))
-            {
-              $output = str_replace($req, sprintf("<info>%s</info>", $req), $output);
-            }
-            $this->writeln($output);
+            $output = str_replace($req, sprintf("<info>%s</info>", $req), $output);
           }
-        });
+          $this->writeln($output);
+        }
+      });
     }
     catch (ProcessFailedException $e)
     {

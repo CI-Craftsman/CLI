@@ -36,7 +36,8 @@ class Notes extends Command
 
         $this->writeln([sprintf('In: ./%s/',$appDir), str_repeat('-', 60)]);
 
-        foreach ($finder as $file) {
+        foreach ($finder as $file)
+        {
             $_file = new \SplFileObject($file->getRealPath());
 
             foreach ($_file as $k => $line) {
@@ -48,11 +49,16 @@ class Notes extends Command
                 }
             }
         }
-        if (empty($found)) {
+        
+        if (empty($found))
+        {
             $this->text('There are not notes marked.');
             $this->newLine();
-        } else {
-            foreach ($found as $file => $lines) {
+        }
+        else
+        {
+            foreach ($found as $file => $lines)
+            {
                 $this->text(sprintf('./%s/%s:', $appDir, $file));
                 $this->newLine();
                 $this->listing($lines);

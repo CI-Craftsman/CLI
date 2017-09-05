@@ -55,10 +55,10 @@ class Console extends Command
 
           $this->writeln([
             sprintf('Craftsman %s - Console',$this->getApplication()->getVersion()),
-            '---------------------------------------------------------------',
+            str_repeat('-', 60),
             'Codeigniter : $CI',
             sprintf('App Path: ./%s/', basename(APPPATH)),
-            '---------------------------------------------------------------'
+            str_repeat('-', 60)
           ]);
 
           $shell->setScopeVariables(['CI' => $CI]);

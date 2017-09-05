@@ -13,9 +13,9 @@ use Craftsman\Core\Generator;
  */
 class Model extends Generator implements \Craftsman\Interfaces\Command
 {
-    protected $name           = 'generate:model';
-    protected $description    = 'Generate a Model';
-    protected $aliases        = ['g:model'];
+    protected $name        = 'generate:model';
+    protected $description = 'Generate a Model';
+    protected $aliases     = ['g:model'];
 
     public function start()
     {

@@ -34,32 +34,29 @@ abstract class Command extends SymfonyCommand
 
     /**
      * Console command aliases
-     * @var string[]
+     * @var array
      */
     protected $aliases = [];
 
     /**
-     * InputInterface instance
-     * @var object
+     * @var \Symfony\Component\Console\Input\InputArgument;
      */
-    protected $_input;
+    protected $input;
 
     /**
-     * OutputInterface instance
-     * @var object
+     * @var \Symfony\Component\Console\Output\OutputInterface;
      */
-    protected $_output;
+    protected $output;
 
     /**
-     * Style instance
-     * @var object
+     * @var \Symfony\Component\Console\Style\SymfonyStyle
      */
-    protected $_style;
+    protected $style;
 
     /**
      * @var \Dotenv\Dotenv
      */
-    protected $_env;
+    protected $env;
 
     /**
      * Configure default attributes
@@ -67,16 +64,16 @@ abstract class Command extends SymfonyCommand
     protected function configure()
     {
         $this
-            ->setName($this->name)
-            ->setDescription($this->description)
-            ->setAliases($this->aliases)
-            ->addOption(
-              'env',
-              null,
-              InputOption::VALUE_REQUIRED,
-              'Set the environment variable file',
-              sprintf('%s/%s', getcwd(), '.craftsman')
-            );
+        ->setName($this->name)
+        ->setDescription($this->description)
+        ->setAliases($this->aliases)
+        ->addOption(
+          'env',
+          null,
+          InputOption::VALUE_REQUIRED,
+          'Set the environment variable file',
+          sprintf('%s/%s', getcwd(), '.craftsman')
+        );
     }
 
     /**
@@ -89,23 +86,23 @@ abstract class Command extends SymfonyCommand
     {
         try
         {
-          $this->_input  = $input;
-          $this->_output = $output;
-          $this->_style  = new SymfonyStyle($input, $output);
+            $this->input  = $input;
+            $this->output = $output;
+            $this->style  = new SymfonyStyle($input, $output);
 
-          $file = new \SplFileInfo($this->getOption('env'));
-          // Create an environment instance
-          $this->_env = new Dotenv(
-            $file->getPathInfo()->getRealPath(),
-            $file->getFilename()
-          );
+            $file = new \SplFileInfo($this->getOption('env'));
+            // Create an environment instance
+            $this->env = new Dotenv(
+                $file->getPathInfo()->getRealPath(),
+                $file->getFilename()
+            );
 
-          $this->_env->load();
-          $this->_env->required(['CI_BASEPATH','CI_APPPATH'])->notEmpty();
+            $this->env->load();
+            $this->env->required(['CI_BASEPATH','CI_APPPATH'])->notEmpty();
         }
         catch (Exception $e)
         {
-          throw new \RuntimeException($e->getMessage());
+            throw new \RuntimeException($e->getMessage());
         }
 
     }
@@ -126,7 +123,7 @@ abstract class Command extends SymfonyCommand
             }
             else
             {
-                throw new \RuntimeException("Command is not set correctly.");
+                throw new \RuntimeException('Command is not set correctly.');
             }
         }
         catch (\Exception $e)
@@ -164,16 +161,18 @@ abstract class Command extends SymfonyCommand
             case 'warning':
             case 'error':
             case 'comment':
-              return call_user_func_array(array($this->_style, $name), $arguments);
+                return call_user_func_array(array($this->style, $name), $arguments);
             case 'getArgument':
-              return call_user_func_array(array($this->_input,'getArgument'), $arguments);
+                return call_user_func_array(array($this->input,'getArgument'), $arguments);
             case 'getOption':
-              return call_user_func_array(array($this->_input, 'getOption'), $arguments);
+                return call_user_func_array(array($this->input, 'getOption'), $arguments);
             case 'writeln':
-              return call_user_func_array(array($this->_output, 'writeln'), $arguments);
+                return call_user_func_array(array($this->output, 'writeln'), $arguments);
             default:
-              throw new \Exception("Craftsman\Command: [{$name}] method not found.");
-
+                throw new \Exception(sprintf(
+                    'Craftsman\Command: [%s] method not found',
+                    $name
+                ));
         }
     }
 }

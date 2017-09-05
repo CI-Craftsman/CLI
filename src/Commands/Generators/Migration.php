@@ -53,7 +53,7 @@ class Migration extends Generator implements \Craftsman\Interfaces\Command
 						? '/^\d{3}_(\w+)$/'
 						: '/^\d{14}_(\w+)$/';
 
-        if ($this->_filesystem->exists($migrationsPath))
+        if ($this->fs->exists($migrationsPath))
 				{
             // And now let's figure out the migration target version
             if ($handle = opendir($migrationsPath))
