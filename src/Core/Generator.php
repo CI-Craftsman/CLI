@@ -5,6 +5,8 @@ use Craftsman\Core\Command;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
+use \Twig_Loader_Filesystem as Twig_Loader;
+use \Twig_Environment;
 
 /**
  * Base Generator Class
@@ -20,12 +22,12 @@ abstract class Generator extends Command
     /**
      * @var \Filesystem
      */
-    protected $_filesystem;
+    protected $fs;
 
     /**
      * @var \Twig_Environment
      */
-    protected $_twig;
+    protected $twig;
 
   	/**
    	* Class constructor
@@ -33,9 +35,11 @@ abstract class Generator extends Command
   	public function __construct()
   	{
       	parent::__construct();
-      	$this->_filesystem = new Filesystem();
-      	$loader = new \Twig_Loader_Filesystem(CRAFTSMANPATH.'utils/templates/');
-      	$this->_twig = new \Twig_Environment($loader);
+
+        $templatesPath = sprintf('%s/utils/templates', rtrim(CRAFTSMANPATH));
+
+      	$this->fs   = new Filesystem();
+      	$this->twig = new Twig_Environment(new Twig_Loader($templatesPath));
   	}
 
 	  /**
@@ -78,26 +82,20 @@ abstract class Generator extends Command
 	  {
 	      foreach ((array) $filenames as $filename)
 				{
-	          if (! $this->getOption('force')
-							&& $this->_filesystem->exists($filename))
+	          if (! $this->getOption('force') && $this->fs->exists($filename))
 						{
-	              throw new \RuntimeException("Cannot duplicate [{$filename}].");
+	              throw new \RuntimeException(sprintf('Cannot duplicate %s', $filename));
 	          }
 
 	          $reflection = new \ReflectionClass(get_class($this));
 
 	          if ($reflection->getShortName() === 'Migration')
 						{
-	              $function = new \Twig_SimpleFunction('argument',
-									function ($field = "") {
-		                  return array_combine(
-												array('name','type'),
-												explode(':', $field)
-											);
-		            	}
-								);
-
-	              $this->_twig->addFunction($function);
+	              $this->twig->addFunction(new \Twig_SimpleFunction('argument',
+                  function ($field = "") {
+		                return array_combine(array('name','type'), explode(':', $field));
+		              }
+                ));
 
 	              foreach ($this->getArgument('options') as $option)
 								{
@@ -106,10 +104,9 @@ abstract class Generator extends Command
 	              }
 	          }
 
-	          $this->_filesystem->dumpFile(
-	        		$filename,
-	        		$this->_twig->loadTemplate($template)->render($options)
-	      		);
+            $output = $this->twig->loadTemplate($template)->render($options);
+
+	          $this->fs->dumpFile($filename, $output);
 	      }
 	      return true;
 	  }
@@ -122,9 +119,9 @@ abstract class Generator extends Command
 	   */
     public function createDirectory($dirPath)
     {
-      if (! $this->_filesystem->exists($dirPath))
+      if (! $this->fs->exists($dirPath))
       {
-        $this->_filesystem->mkdir($dirPath);
+        $this->fs->mkdir($dirPath);
       }
     }
 }
