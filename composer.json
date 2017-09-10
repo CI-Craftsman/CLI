@@ -20,9 +20,9 @@
     "symfony/filesystem": "^3.0",
     "symfony/process": "^3.0",
     "symfony/finder": "^3.2",
-    "twig/twig" : "^2.4|~1.0",
+    "twig/twig" : ">=1.27",
     "vlucas/phpdotenv": "^2.4",
-    "psy/psysh": "@stable"
+    "psy/psysh": ">=0.8.11"
   },
   "autoload": {
     "psr-4": { "Craftsman\\": "src/" }
