@@ -7,6 +7,8 @@ use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Serve Command
@@ -30,27 +32,27 @@ class Serve extends Command
     parent::configure();
 
     $this
-    ->addOption(
-        'host',
-        NULL,
-        InputOption::VALUE_OPTIONAL,
-        'The host address to serve the application on.',
-        'localhost'
-    )
-    ->addOption(
-        'port',
-        NULL,
-        InputOption::VALUE_OPTIONAL,
-        'The port to serve the application on.',
-        8000
-    )
-    ->addOption(
-        'docroot',
-        NULL,
-        InputOption::VALUE_OPTIONAL,
-        'Specify an explicit document root.',
-        FALSE
-    );
+        ->addOption(
+            'host',
+            NULL,
+            InputOption::VALUE_OPTIONAL,
+            'The host address to serve the application on.',
+            'localhost'
+            )
+        ->addOption(
+            'docroot',
+            NULL,
+            InputOption::VALUE_OPTIONAL,
+            'Specify an explicit document root.',
+            FALSE
+        )
+        ->addOption(
+            'port',
+            NULL,
+            InputOption::VALUE_OPTIONAL,
+            'The port to serve the application on.',
+            8000
+        );
   }
 
   /**
@@ -61,50 +63,41 @@ class Serve extends Command
    */
   public function start()
   {
-    $host    = $this->getOption('host');
-    $port    = intval($this->getOption('port'));
-    $docpath = $this->getOption('docroot')? $this->getOption('docroot') : '.';
-    $base    = ProcessUtils::escapeArgument(CRAFTSMANPATH);
-    $binary  = ProcessUtils::escapeArgument((new PhpExecutableFinder)->find(false));
-    $docroot = ProcessUtils::escapeArgument($docpath);
-
-    $this->writeln([
-      sprintf('Codeigniter development server started at %s', date(DATE_RFC2822)),
-      sprintf('Listening on http://%s:%s', $host, $port),
-      sprintf('Document root is %s', realpath($docpath)),
-      'Press Ctrl-C to quit.'
-    ]);
-
     try
     {
-      $process = new Process(sprintf(
-          '%s -S %s:%s %s/utils/server.php -t %s',
-          $binary, $host, $port, $base, $docroot
-      ));
+        $host    = $this->getOption('host');
+        $port    = intval($this->getOption('port'));
+        $docpath = $this->getOption('docroot')? $this->getOption('docroot') : '.';
 
-      $process
-      ->setWorkingDirectory($docpath)
-      ->setTimeout(0)
-      ->setPTY(true)
-      ->mustRun(function($type, $buffer) {
-          foreach (explode("\n", rtrim($buffer, "\n")) as $output)
-          {
-              $req = substr(strrchr($output, ' '), 1);
+        $binary  = ProcessUtils::escapeArgument((new PhpExecutableFinder)->find(false));
+        $docroot = ProcessUtils::escapeArgument($docpath);
 
-              if ($response = (strpos($output, '[200]') !== FALSE))
-              {
-                  $output = str_replace($req, sprintf("<info>%s</info>", $req), $output);
-              }
+        $this->writeln([
+          sprintf('Codeigniter development server started at %s', date(DATE_RFC2822)),
+          sprintf('Listening on http://%s:%s', $host, $port),
+          sprintf('Document root is %s', realpath($docpath)),
+          'Press Ctrl-C to quit.'
+        ]);
 
-              $this->writeln($output);
-          }
-      });
+        $process = new Process(sprintf('%s -S %s:%s -t %s', $binary, $host, $port, $docroot));
+        $output  = $this->output;
+
+        $process
+            ->setWorkingDirectory($docpath)
+            ->setTimeout(0)
+            ->setPTY(true)
+            ->run(function ($type, $buffer) use($output) {
+                if (Process::ERR === $type && $output instanceof ConsoleOutputInterface) {
+                    $output = $output->getErrorOutput();
+                }
+                $output->write($buffer, false, OutputInterface::OUTPUT_RAW);
+            });
     }
-    catch (ProcessFailedException $e)
+    catch (ProcessFailedException | Exception $e)
     {
-      throw new Exception(sprintf(
-        'Error Processing Request: %s', $e->getMessage()
-      ));
+        $this->error(sprintf(
+            'Error starting the server: %s', $e->getMessage()
+        ));
     }
   }
 }
