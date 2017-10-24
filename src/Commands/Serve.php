@@ -67,23 +67,21 @@ class Serve extends Command
     {
         $host    = $this->getOption('host');
         $port    = intval($this->getOption('port'));
-        $docpath = $this->getOption('docroot')? $this->getOption('docroot') : '.';
-
         $binary  = ProcessUtils::escapeArgument((new PhpExecutableFinder)->find(false));
-        $docroot = ProcessUtils::escapeArgument($docpath);
+        $docroot = ProcessUtils::escapeArgument($this->getOption('docroot'));
+        $output  = $this->output;
 
         $this->writeln([
           sprintf('Codeigniter development server started at %s', date(DATE_RFC2822)),
           sprintf('Listening on http://%s:%s', $host, $port),
-          sprintf('Document root is %s', realpath($docpath)),
+          sprintf('Document root is %s', getcwd()),
           'Press Ctrl-C to quit.'
         ]);
 
         $process = new Process(sprintf('%s -S %s:%s -t %s', $binary, $host, $port, $docroot));
-        $output  = $this->output;
 
         $process
-            ->setWorkingDirectory($docpath)
+            // ->setWorkingDirectory(getcwd())
             ->setTimeout(0)
             ->setPTY(true)
             ->run(function ($type, $buffer) use($output) {
