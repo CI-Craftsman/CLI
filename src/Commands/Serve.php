@@ -91,7 +91,7 @@ class Serve extends Command
                 $output->write($buffer, false, OutputInterface::OUTPUT_RAW);
             });
     }
-    catch (ProcessFailedException | Exception $e)
+    catch (Exception $e)
     {
         $this->error(sprintf(
             'Error starting the server: %s', $e->getMessage()
