@@ -167,7 +167,7 @@ abstract class Migration extends Command
     {
         return sprintf(
             'Migrating database <info>%s</info> to version %s'
-            .'<comment>%s</comment> from <comment>%s</comment>',
+            .' from <comment>%s</comment>',
             $status, $version, $db_version
         );
     }
