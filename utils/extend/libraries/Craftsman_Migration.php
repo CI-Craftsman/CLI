@@ -40,8 +40,7 @@ class Craftsman_Migration extends \CI_Migration
         		'module' => array(
         			'type' => 'VARCHAR',
         			'first' => TRUE,
-        			'constraint' => '100',
-        			'null' => FALSE
+        			'constraint' => '100'
         		)
 			);
 			$this->dbforge->add_column($this->_migration_table, $fields);
