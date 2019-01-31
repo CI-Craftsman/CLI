@@ -40,14 +40,23 @@ class Craftsman_Migration extends \CI_Migration
         		'module' => array(
         			'type' => 'VARCHAR',
         			'first' => TRUE,
-        			'constraint' => '100',
-        			'null' => FALSE
+        			'constraint' => '100'
         		)
 			);
 			$this->dbforge->add_column($this->_migration_table, $fields);
 
-			$this->db->query("ALTER TABLE {$this->_migration_table} ADD PRIMARY KEY(module);");
-			$this->db->query("UPDATE {$this->_migration_table} SET module = '{$this->_module_name}' LIMIT 1;");
+			$this->dbforge->add_key('module', TRUE);
+
+			$firstVersion = $this->db
+				->select('version')
+				->from($this->_migration_table)
+				->limit(1)
+				->get_compiled_select();
+
+			$this->db
+				->set('module', $this->_module_name)
+				->where("version IN ($firstVersion)", NULL, FALSE)
+				->update($this->_migration_table);
 		}
 		$this->_set_migration_path();
 
@@ -176,10 +185,7 @@ class Craftsman_Migration extends \CI_Migration
 		}
 		else
 		{
-			$insert_query = $this->db->insert_string($this->_migration_table, $data);
-			$insert_query = str_replace('INSERT INTO','INSERT IGNORE INTO', $insert_query);
-
-			$this->db->query($insert_query);
+			$this->db->insert($this->_migration_table, $data);
 		}
 		return $this;
 	}
