@@ -46,8 +46,17 @@ class Craftsman_Migration extends \CI_Migration
 			$this->dbforge->add_column($this->_migration_table, $fields);
 
 			$this->dbforge->add_key('module', TRUE);
-			
-			$this->db->query("UPDATE {$this->_migration_table} SET module = '{$this->_module_name}' LIMIT 1;");
+
+			$firstVersion = $this->db
+				->select('version')
+				->from($this->_migration_table)
+				->limit(1)
+				->get_compiled_select();
+
+			$this->db
+				->set('module', $this->_module_name)
+				->where("version IN ($firstVersion)", NULL, FALSE)
+				->update($this->_migration_table);
 		}
 		$this->_set_migration_path();
 
