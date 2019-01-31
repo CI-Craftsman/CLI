@@ -45,7 +45,8 @@ class Craftsman_Migration extends \CI_Migration
 			);
 			$this->dbforge->add_column($this->_migration_table, $fields);
 
-			$this->db->query("ALTER TABLE {$this->_migration_table} ADD PRIMARY KEY(module);");
+			$this->dbforge->add_key('module', TRUE);
+			
 			$this->db->query("UPDATE {$this->_migration_table} SET module = '{$this->_module_name}' LIMIT 1;");
 		}
 		$this->_set_migration_path();
